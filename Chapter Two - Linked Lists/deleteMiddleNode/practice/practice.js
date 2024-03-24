@@ -9,11 +9,7 @@ const { chapter, problem } = getChapterAndProblem(__dirname)
 // Implement solution here.
 
 const deleteMiddleNode = (node) => {
-  if (!node.next) {
-    return
-  }
-  node.data = node.next.data
-  node.next = node.next.next
+
 }
 
 // Execute all test cases and print the input, output, expected value and pass/fail.
