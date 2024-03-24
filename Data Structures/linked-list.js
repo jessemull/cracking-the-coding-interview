@@ -10,6 +10,23 @@ class LinkedList {
     return list
   }
 
+  static checkCycle(list) {
+    const set = new Set()
+
+    let ptr = list
+  
+    while (ptr) {
+      if (set.has(ptr)) {
+        return true
+      } else {
+        set.add(ptr)
+        ptr = ptr.next
+      }
+    }
+  
+    return false
+  }
+
   static length(list) {
     let count = 0
     let node = list
@@ -60,11 +77,11 @@ class LinkedList {
     return head
   }
 
-  static createIntersection(arr1, arr2, data) {
+  static createIntersection(arr1, arr2, val1, val2) {
     const list1 = this.createList(arr1)
     const list2 = this.createList(arr2)
-    const middleNode = this.find(list1, 3)
-    const lastNode = this.find(list2, 8)
+    const middleNode = this.find(list1, val1)
+    const lastNode = this.find(list2, val2)
     lastNode.next = middleNode
     return [list1, list2]
   }
@@ -81,13 +98,50 @@ class LinkedList {
   }
 
   static printList(list) {
+    let set = new Set()
     let printed = ''
     let node = list
+
     while (node !== null) {
-      printed += `${node.data} ${node.next !== null ? '-> ' : ''}`
+      printed += `${node.data}${node.next !== null ? ' -> ' : ''}`
+
+      // Break if cycle detected
+
+      if (set.has(node)) {
+        break
+      } else {
+        set.add(node)
+      }   
+
       node = node.next
     }
-    console.log(printed)
+
+    return printed
+  }
+
+  static toArray(list) {
+    let set = new Set()
+    let array = []
+    let node = list
+    while (node !== null) {
+
+      array.push(node.data)
+
+      // Break if cycle detected
+
+      if (set.has(node)) {
+        break
+      } else {
+        set.add(node)
+      }   
+
+      node = node.next
+    }
+    return array
+  }
+
+  static clone(list) {
+    return this.createList(this.toArray(list))
   }
 }
 
