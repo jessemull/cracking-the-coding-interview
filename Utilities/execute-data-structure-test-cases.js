@@ -1,4 +1,18 @@
-const execute = (fxn, testCases, chapter, problem) => {
+const invoke = (dataStructure, testCase) => {
+  let passedAll = true
+  testCase.expected.forEach(({ method, args, expected }) => {
+    const input = JSON.parse(JSON.stringify(args))
+    const output = dataStructure[method](...args)
+    let passed = !expected || expected(output)
+    if (!passed) {
+      passedAll = false
+    }
+    console.log(`Method: ${method} Args: ${JSON.stringify(input)}, OUTPUT: ${JSON.stringify(output)}, Assertion: ${expected}, PASS/FAIL: ${passed ? 'PASS' : 'FAIL'}`)
+  })
+  return passedAll
+}
+
+const execute = (dataStructure, testCases, chapter, problem) => {
   // Grab the chapter and problem name and print them as a header.
 
   console.log('-----------------------------------------------------------------------------------------------')
@@ -14,15 +28,12 @@ const execute = (fxn, testCases, chapter, problem) => {
   // For each test case execute the solution and print out the results.
 
   testCases.forEach(testCase => {
-    const output = fxn(...testCase.input)
-    const passed = JSON.stringify(output) === JSON.stringify(testCase.expected)
-    const passOrFail = passed ? 'PASS' : 'FAIL'
+    const passed = invoke(dataStructure, testCase)
     
     if (passed) {
       passedTestCasesCount++
     }
 
-    console.log('INPUT:', ...testCase.input, 'OUTPUT:', output, 'EXPECTED:', testCase.expected, 'PASS/FAIL: ' + passOrFail)
   })
 
   // Print the total number of passed test cases.

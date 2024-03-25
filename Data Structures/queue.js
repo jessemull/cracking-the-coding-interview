@@ -4,7 +4,7 @@ class Queue {
   }
 
   add(data) {
-    this.data.unshift(data)
+    this.data.push(data)
   }
 
   isEmpty() {
