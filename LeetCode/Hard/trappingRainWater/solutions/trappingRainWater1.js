@@ -1,22 +1,24 @@
-const trappingRainWater = (height) => {
-  if (!height || height.length === 0) {
-    return null
+const trappingRainWater = (heights) => {
+  let left = []
+  let leftMax = -1
+
+  for (let i = 0 ; i < heights.length; i++) {
+    leftMax = Math.max(leftMax, heights[i])
+    left[i] = leftMax
   }
 
-  let left = 0
-  let right = height.length - 1
-  let sum = 0
-  let leftMax = height[left]
-  let rightMax = height[right]
+  let right = []
+  let rightMax = -1
 
-  while (left < right) {
-    if (height[left] < height[right]) {
-      leftMax = Math.max(height[left], leftMax)
-      sum += leftMax - height[++left]
-    } else {
-      rightMax = Math.max(height[right], rightMax)
-      sum += rightMax - height[++right]
-    }
+  for (let i = heights.length - 1; i >= 0; i--) {
+    rightMax = Math.max(rightMax, heights[i])
+    right[i] = rightMax
+  }
+
+  let sum = 0
+
+  for (let i = 0; i < heights.length; i++) {
+    sum += Math.min(left[i], right[i]) - heights[i]
   }
 
   return sum
