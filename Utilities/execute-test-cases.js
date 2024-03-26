@@ -14,6 +14,7 @@ const execute = (fxn, testCases, chapter, problem) => {
   // For each test case execute the solution and print out the results.
 
   testCases.forEach(testCase => {
+    const input = JSON.parse(JSON.stringify(testCase.input))
     const output = fxn(...testCase.input)
     const passed = JSON.stringify(output) === JSON.stringify(testCase.expected)
     const passOrFail = passed ? 'PASS' : 'FAIL'
@@ -22,7 +23,7 @@ const execute = (fxn, testCases, chapter, problem) => {
       passedTestCasesCount++
     }
 
-    console.log('INPUT:', ...testCase.input, 'OUTPUT:', output, 'EXPECTED:', testCase.expected, 'PASS/FAIL: ' + passOrFail)
+    console.log('INPUT:', input, 'OUTPUT:', output, 'EXPECTED:', testCase.expected, 'PASS/FAIL: ' + passOrFail)
   })
 
   // Print the total number of passed test cases.
