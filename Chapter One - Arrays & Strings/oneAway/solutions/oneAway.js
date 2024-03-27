@@ -53,13 +53,11 @@ const oneAway = (str1, str2) => {
   return true
 }
   
-  const main = () => {
-    console.log(oneAway(process.argv[2], process.argv[3]))
-  }
-  
-  main()
-  
-  // node oneAway.js abba abb -> true
-  // node oneAway.js abba abca -> true
-  // node oneAway.js abba ab -> false
-  // node oneAway.js abba acca -> false
+const main = () => {
+  console.log(oneAway('abba', 'abb'))  // true
+  console.log(oneAway('abba', 'abca')) // true
+  console.log(oneAway('abba', 'ab'))   // false
+  console.log(oneAway('abba', 'acca')) // false
+}
+
+main()

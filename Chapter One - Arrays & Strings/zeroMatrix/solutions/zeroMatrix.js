@@ -63,6 +63,8 @@ const printMatrix = (matrix) => {
 }
 
 const main = () => {
+  printMatrix(zeroMatrix(matrix1))
+  console.log('\n')
   printMatrix(zeroMatrix(matrix2))
 }
 

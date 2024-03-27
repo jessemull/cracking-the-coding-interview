@@ -40,7 +40,7 @@ const buildOrder = (graph) => {
 }
 
 const main = () => {
-  console.log(buildOrder(graph))
+  console.log(buildOrder(graph)) // [ 'e', 'f', 'a', 'b', 'd', 'c' ]
 }
 
 main()

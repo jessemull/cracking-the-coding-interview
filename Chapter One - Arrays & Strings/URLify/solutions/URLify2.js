@@ -17,9 +17,7 @@ const urlify = (str) => {
 }
   
 const main = () => {
-  console.log(urlify(process.argv[2]))
+  console.log(urlify('Replace spaces with ampersands and stuff!')) // Replace%20spaces%20with%20ampersands%20and%20stuff!
 }
 
 main()
-  
-// node URLify2.js "Replace spaces with ampersands and stuff!" -> Replace%20spaces%20with%20ampersands%20and%20stuff!

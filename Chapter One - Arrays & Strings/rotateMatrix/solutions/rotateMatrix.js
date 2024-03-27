@@ -53,7 +53,8 @@ const printMatrix = (matrix) => {
 }
 
 const main = () => {
-  console.log(printMatrix(rotateMatrix(matrix1)))
+  printMatrix(rotateMatrix(matrix1))
+  printMatrix(rotateMatrix(matrix2))
 }
 
 main()

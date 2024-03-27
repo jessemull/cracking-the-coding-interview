@@ -48,8 +48,32 @@ class BinaryTree {
     } else if (node.right === null) {
       node.right = new TreeNode(data)
     } else {
-      this.insert(data, randomLeftOrRight(node.left, node.right))
+      this.insert(data, node.left)
     }
+  }
+
+  toString() {
+    return this.getTreeStr()
+  }
+
+  getTreeStr(node = this.root, prefix = '', isLeft = false) {
+    if (node === null) {
+        return ''
+    }
+
+    let str = ''
+
+    if (node.right !== null) {
+        str += this.getTreeStr(node.right, prefix + (isLeft ? '│   ' : '    '), false)
+    }
+
+    str += prefix + (isLeft ? '└── ' : '┌── ') + node.data + '\n'
+
+    if (node.left !== null) {
+        str += this.getTreeStr(node.left, prefix + (isLeft ? '    ' : '│   '), true)
+    }
+
+    return str
   }
 
   print(node = this.root, level = 0, prefix = 'R: ') {

@@ -17,11 +17,9 @@ const isUnique = (str) => {
 }
 
 const main = () => {
-  console.log(isUnique(process.argv[2]))
+  console.log(isUnique('abcdefg')) // true
+  console.log(isUnique('abcbefg')) // false
 }
 
 main()
-
-// node isUnique1.js mystring // true
-// node isUnique2.js mmstring // false
 

@@ -12,12 +12,8 @@ const stringRotation = (str1, str2) => {
 }
   
 const main = () => {
-  console.log(stringRotation(process.argv[2], process.argv[3]))
+  console.log(stringRotation('abcde', 'deabc')) // true
+  console.log(stringRotation('abcde', 'deabz')) // false
 }
 
 main()
-
-// node stringRotation1.js abcde deabc -> true
-// node stringRotation2.js abcde deabz -> false
-// node stringRotation2.js aaaaa aaaaa -> true
-// node stringRotation2.js abcde bcde -> false
