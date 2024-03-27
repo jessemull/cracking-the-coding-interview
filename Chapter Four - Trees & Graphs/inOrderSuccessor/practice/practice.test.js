@@ -1,0 +1,26 @@
+const assert = require('node:assert')
+const BinarySearchTree = require('../../../Data Structures/binary-search-tree')
+const inOrderSuccessor = require('./practice')
+const test = require('node:test')
+
+test('inOrderSuccessor - should find successor', () => {
+  const tree = new BinarySearchTree()
+  tree.insert(6)
+  tree.insert(5)
+  tree.insert(1)
+  tree.insert(10)
+  tree.insert(2)
+  tree.insert(4)
+  tree.insert(9)
+  tree.insert(8)
+  const output = inOrderSuccessor(tree.root)
+  assert.deepEqual(output, 8)
+})
+
+test('inOrderSuccessor - should return null if there is no successor', () => {
+  const tree = new BinarySearchTree()
+  tree.insert(6)
+  tree.insert(5)
+  const output = inOrderSuccessor(tree.root)
+  assert.deepEqual(output, null)
+})
