@@ -30,6 +30,10 @@
 // Once the left pointer is greater than or equal to the right pointer we're done.
 
 const reverseString = (str) => {
+  if (!str) {
+    return str
+  }
+
   const arr = str.split('')
   let left = 0
   let right = arr.length - 1

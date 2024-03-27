@@ -25,6 +25,10 @@ const vowels = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']
 const isVowel = (char) => vowels.includes(char)
 
 const longestVowelSubstring = (str) => {
+  if (!str) {
+    return 0
+  }
+
   let vowelLength = 0
   let maxVowelLength = 0
   const arr = str.split('')

@@ -11,3 +11,13 @@ test(`reverseOnlyLetters - hannah`, () => {
   const output = reverseOnlyLetters('Test1ng-Leet=code-Q!')
   assert.deepEqual(output, 'Qedo1ct-eeLg=ntse-T!')
 })
+
+test(`reverseOnlyLetters - null`, () => {
+  const output = reverseOnlyLetters(null)
+  assert.deepEqual(output, null)
+})
+
+test(`reverseOnlyLetters - undefined`, () => {
+  const output = reverseOnlyLetters(undefined)
+  assert.deepEqual(output, undefined)
+})

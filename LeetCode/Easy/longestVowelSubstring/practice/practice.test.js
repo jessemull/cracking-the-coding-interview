@@ -11,3 +11,13 @@ test(`longestVowelSubstring - theeare`, () => {
   const output = longestVowelSubstring('theeare')
   assert.deepEqual(output, 3)
 })
+
+test(`longestVowelSubstring - null`, () => {
+  const output = longestVowelSubstring(null)
+  assert.deepEqual(output, 0)
+})
+
+test(`longestVowelSubstring - undefined`, () => {
+  const output = longestVowelSubstring(undefined)
+  assert.deepEqual(output, 0)
+})

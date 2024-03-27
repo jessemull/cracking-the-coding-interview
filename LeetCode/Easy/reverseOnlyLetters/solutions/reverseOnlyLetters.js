@@ -51,6 +51,10 @@ const swap = (arr, index1, index2) => {
 }
 
 const reverseOnlyLetters = (str) => {
+  if (!str) {
+    return str
+  }
+  
   const arr = str.split('')
   let left = 0
   let right = arr.length - 1

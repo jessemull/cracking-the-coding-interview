@@ -11,3 +11,13 @@ test(`reverseString - hannah`, () => {
   const output = reverseString('hannah')
   assert.deepEqual(output, 'hannah')
 })
+
+test(`reverseString - null`, () => {
+  const output = reverseString(null)
+  assert.deepEqual(output, null)
+})
+
+test(`reverseString - undefined`, () => {
+  const output = reverseString(undefined)
+  assert.deepEqual(output, undefined)
+})
