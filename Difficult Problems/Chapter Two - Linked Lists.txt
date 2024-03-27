@@ -1,0 +1,3 @@
+Palindrome
+Sum Lists
+Loop Detector
