@@ -2,66 +2,40 @@
 
 ## Description
 
-This repository holds solutions to the problem sets from the modern day classic Cracking the Coding Interview.
-It is intended for use by myself, my co-workers and my friends but anyone is welcome! It provides some simple scaffolding
-to allow users to practice each problem against a set of test data and prints out the results LeetCode style with a pass
-or fail.
+This repository holds solutions to the problem sets from the modern day classic Cracking the Coding Interview as well as 
+select LeetCode problems. It is intended for use by myself, my co-workers and my friends but anyone is welcome! It provides 
+test suites to practice each problem.
 
-Please feel free to make a PR if an answer is wrong or to provide additional (probably better) solutions or additional test cases!
+Please feel free to make a PR if an answer is wrong or to provide additional solutions or test cases!
 
 ## Usage
 
 The project is broken down into (1) a repository for each chapter (2) implementation of basic data structures required for
-completing the problem sets (3) utilites to generate test cases and output the results of each executed problem set and (4) 
-a list of problems I personally find more challenging relative to the other problems in each chapter.
+completing the problem sets (3) scaffolding and test cases to practice each problem and (4) a list of problems I personally find 
+more challenging relative to the other problems in each chapter as a way to focus during review.
 
 Each chapter is further sub-divided into a directory with solutions and a directory for practice. To practice, first add your
 implementation to the empty function or functions:
 
 ```javascript
-const execute = require('../../../Utilities/execute-test-cases')
-const getChapterAndProblem = require('../../../Utilities/chapter-and-problem')
-const testCases = require('./test-cases')
-
-// Grab the chapter and problem names.
-
-const { chapter, problem } = getChapterAndProblem(__dirname)
-
 // Implement solution here.
 
 const isUniq = (str) => {
 
 }
 
-// Execute all test cases and print the input, output, expected value and pass/fail.
-
-const main = () => {
-  execute(isUniq, testCases, chapter, problem)
-}
-
-main()
+module.exports = isUniq
 ```
 
-Then simply run the code:
+Then simply run the tests using the native node.js test runner:
 
 ```
-node practice.js
+node practice.test.js
 ```
 
-The results will be output to the console:
+Each solution can also be run with some output:
 ```
------------------------------------------------------------------------------------------------
-Chapter One - Arrays & Strings
------------------------------------------------------------------------------------------------
-Problem - isUniq
------------------------------------------------------------------------------------------------
-INPUT: abcdefg OUTPUT: true EXPECTED: true PASS/FAIL: PASS
-INPUT: abcbefg OUTPUT: false EXPECTED: false PASS/FAIL: PASS
-INPUT: OUTPUT: false EXPECTED: false PASS/FAIL: PASS
-INPUT: null OUTPUT: false EXPECTED: false PASS/FAIL: PASS
------------------------------------------------------------------------------------------------
-PASSED 4/4 TEST CASES
------------------------------------------------------------------------------------------------
+node solutions/isUniq.js
 ```
 
 Remember to be kind and empathetic in your interviews. This stuff isn't easy. Happy coding!

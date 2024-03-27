@@ -32,9 +32,9 @@ const kthToLast = (head, k) => {
 }
 
 const main = () => {
-  console.log(kthToLast(list1, 2)) // 6
-  console.log(kthToLast(list1, 0)) // 7
-  console.log(kthToLast(list2, 0)) // 1
+  console.log(kthToLast(list1, 2))   // 6
+  console.log(kthToLast(list1, 0))   // 7
+  console.log(kthToLast(list2, 0))   // 1
   console.log(kthToLast(list1, 100)) // null
 }
 

@@ -2,9 +2,14 @@
 
 const LinkedList = require("../../../Data Structures/linked-list")
 const list1 = LinkedList.createList([1, 2, 1])
+const list2 = LinkedList.createList([1, 2, 3])
 
 const palindrome = (list) => {
-  if (list === null || list.next === null) {
+  if (list === null || list === undefined) {
+    return false
+  }
+
+  if (list.next === null) {
     return true
   }
 
@@ -31,7 +36,8 @@ const palindrome = (list) => {
 }
 
 const main = () => {
-  console.log(palindrome(list1))
+  console.log(palindrome(list1)) // true
+  console.log(palindrome(list2)) // false
 }
 
 main()

@@ -33,14 +33,8 @@ const stringCompression = (str) => {
 }
 
 const main = () => {
-  console.log(stringCompression(process.argv[2]))
+  console.log(stringCompression('aabbccc')) // a2b2c3
+  console.log(stringCompression('aa')) // aa
 }
 
 main()
-
-// node stringCompression.js aabb -> aabb
-// node stringCompression.js aabbb -> 
-// node stringCompression.js ab -> ab
-// node stringCompression.js aa -> aa
-// node stringCompression.js aabbccc -> a2b2c3
-// node stringCompression.js abcabc -> abcabc

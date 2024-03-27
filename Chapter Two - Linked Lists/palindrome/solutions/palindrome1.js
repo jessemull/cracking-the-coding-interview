@@ -4,6 +4,7 @@
 
 const LinkedList = require("../../../Data Structures/linked-list")
 const list1 = LinkedList.createList([1, 2, 1])
+const list2 = LinkedList.createList([1, 2, 3])
 
 const reverse = (head) => {
   let current = head
@@ -22,7 +23,11 @@ const reverse = (head) => {
 }
 
 const palindrome = (head) => {
-  if (head === null || head.next === null) {
+  if (head === null || head === undefined) {
+    return false
+  }
+
+  if (head.next === null) {
     return true
   }
 
@@ -43,7 +48,8 @@ const palindrome = (head) => {
 }
 
 const main = () => {
-  console.log(palindrome(list1))
+  console.log(palindrome(list1)) // true
+  console.log(palindrome(list2)) // false
 }
 
 main()

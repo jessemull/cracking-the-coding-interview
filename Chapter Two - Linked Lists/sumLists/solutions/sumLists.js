@@ -31,7 +31,7 @@ const sumLists = (list1, list2) => {
 }
 
 const main = () => {
-  LinkedList.printList(sumLists(list1, list2))
+  console.log(LinkedList.printList(sumLists(list1, list2))) // 2 -> 1 -> 7
 }
 
 main()

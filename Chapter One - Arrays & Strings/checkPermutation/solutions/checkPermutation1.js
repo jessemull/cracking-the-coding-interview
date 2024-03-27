@@ -24,10 +24,8 @@ const checkPermutations = (str1, str2) => {
 }
 
 const main = () => {
-  console.log(checkPermutations(process.argv[2], process.argv[3]))
+  console.log(checkPermutations('fed', 'def')) // true
+  console.log(checkPermutations('fed', 'den')) // false
 }
 
 main()
-
-// node checkPermutation fed def -> true
-// node checkPermutation fed den -> false

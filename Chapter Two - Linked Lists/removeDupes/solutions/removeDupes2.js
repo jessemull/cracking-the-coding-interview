@@ -30,15 +30,14 @@ const removeDupes = (head) => {
   }
 
   return head
-
 }
 
 const main = () => {
-  LinkedList.printList(removeDupes(list1)) // 1 -> 3 -> 4 -> 8 -> 2 -> 7
-  LinkedList.printList(removeDupes(list2)) // 1 -> 2 -> 3 -> 4 -> 5
-  LinkedList.printList(removeDupes(list3)) // 1
-  LinkedList.printList(removeDupes(list4)) // 1
-  LinkedList.printList(removeDupes(null))  // null
+  console.log(LinkedList.printList(removeDupes(list1))) // 1 -> 3 -> 4 -> 8 -> 2 -> 7
+  console.log(LinkedList.printList(removeDupes(list2))) // 1 -> 2 -> 3 -> 4 -> 5
+  console.log(LinkedList.printList(removeDupes(list3))) // 1
+  console.log(LinkedList.printList(removeDupes(list4))) // 1
+  console.log(LinkedList.printList(removeDupes(null)))  // null
 }
 
 main()

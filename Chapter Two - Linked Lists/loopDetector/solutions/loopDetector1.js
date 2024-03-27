@@ -6,7 +6,7 @@
 //            \____________/
 // A tricky part of this problem is that the equality check needs come after moving the pointers otherwise the initial state will return true.
 
-const LinkedList = require("../../Data Structures/linked-list");
+const LinkedList = require('../../../Data Structures/linked-list')
 
 // We need to gerenate test data
 

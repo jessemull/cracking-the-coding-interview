@@ -3,7 +3,7 @@
 const Stack = require('../../../Data Structures/stack')
 
 class StackOfPlates {
-  constructor(limit) {
+  constructor(limit = 3) {
     this.limit = limit
     this.stacks = [new Stack()]
   }

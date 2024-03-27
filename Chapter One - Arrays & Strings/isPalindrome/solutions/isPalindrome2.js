@@ -25,10 +25,9 @@ const isPalindrome = (str) => {
 }
   
 const main = () => {
-  console.log(isPalindrome(process.argv[2], process.argv[3]))
+  console.log(isPalindrome('abba')) // true
+  console.log(isPalindrome('daba')) // false
+
 }
 
 main()
-  
-// node isPalindrome2.js abba baba -> true
-// node isPalindrome2.js abba daba -> false

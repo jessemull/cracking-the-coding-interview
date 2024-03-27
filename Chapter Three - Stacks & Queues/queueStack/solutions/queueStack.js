@@ -1,7 +1,6 @@
 // It seems like there must be a better way to do this but we can just push everything onto one stack and then return the last item in the other stack.
 // Then we set the other stack as the non-empty stack and repeat.
 // Then we can improve slightly by not just pushing everything back onto the first stack until we need to. For adding an item we have to reverse the order if the first stack is empty.
-// For 
 
 const Stack = require('../../../Data Structures/stack')
 

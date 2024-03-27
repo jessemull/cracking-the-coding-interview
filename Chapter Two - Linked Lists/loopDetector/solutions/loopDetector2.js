@@ -2,7 +2,7 @@
 // 1 -> 2 -> 3 -> 4 -> 5 -> 3
 //            \____________/
 
-const LinkedList = require("../../Data Structures/linked-list");
+const LinkedList = require('../../../Data Structures/linked-list')
 
 // We need to gerenate test data
 
