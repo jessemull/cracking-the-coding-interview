@@ -1,3 +1,29 @@
+// This appears to be a trivial problem but it is not. A naive assumption is that we have equaly probability of choosing 
+// the current node its left child or its right child. In actuality we need to consider how many children the tree has on 
+// each side.
+//
+// One option is to just convert all of the nodes into an array and then choose one of the items in the array at random.
+//
+// Another option is to mark all the nodes with an index and then choose one of the indices at random. Then visit each
+// node in the tree until the index is found.
+//
+// For each of the above options, we have to iterate through the entire tree each time and/or add space complexity.
+//
+// Instead, because of how the problem is worded, we can keep track of the size of the tree underneath each node by
+// generating out own tree node class.
+//
+// Each time a node is added, we simply increment the size. When we need to find a random node, we find the size of
+// the left half of the tree and the size of the right half of the tree and then pick a number in between the total
+// number of nodes beneath the current one.
+//
+// If the number is greater than the number of left nodes, we iterate left.
+//
+// If the number is less than the number of left nodes, we iterate right.
+//
+// If the number is equal to the number of left nodes we return the current node.
+//
+// This problem can be further optimized to not call random again each time we iterate but will be left until a later time.
+
 const getRandomInt = (min, max) => {
   const minCeiled = Math.ceil(min)
   const maxFloored = Math.floor(max)

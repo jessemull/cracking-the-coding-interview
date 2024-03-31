@@ -1,6 +1,6 @@
 // Implement your solution here.
 
-const firstCommonAncestor = (node1, node2) => {
+const firstCommonAncestor = (root, node1, node2) => {
 
 }
 
