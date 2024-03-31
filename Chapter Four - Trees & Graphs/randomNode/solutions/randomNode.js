@@ -1,6 +1,6 @@
-// This appears to be a trivial problem but it is not. A naive assumption is that we have equaly probability of choosing 
-// the current node its left child or its right child. In actuality we need to consider how many children the tree has on 
-// each side.
+// This appears to be a trivial problem but it is not. A naive assumption is that we have equaly probability of choosing (1)
+// the current node (2) its left child or (3) its right child e.g. 1/3 chance. In actuality, we need to consider how many children
+// the tree has on each side.
 //
 // One option is to just convert all of the nodes into an array and then choose one of the items in the array at random.
 //
@@ -10,7 +10,7 @@
 // For each of the above options, we have to iterate through the entire tree each time and/or add space complexity.
 //
 // Instead, because of how the problem is worded, we can keep track of the size of the tree underneath each node by
-// generating out own tree node class.
+// generating our own tree node class.
 //
 // Each time a node is added, we simply increment the size. When we need to find a random node, we find the size of
 // the left half of the tree and the size of the right half of the tree and then pick a number in between the total
