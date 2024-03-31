@@ -1,16 +1,10 @@
 // In a binary search tree, the node to the left <= current < right. It provides special properties.
 
-class TreeNode {
-  constructor(data) {
-    this.left = null
-    this.right = null
-    this.data = data || null
-  }
-}
+const TreeNode = require('./binary-tree-node')
 
 class BinaryTree {
-  constructor() {
-    this.root = null
+  constructor(root) {
+    this.root = root || null
   }
   
   delete(data, node = this.root) {
@@ -114,6 +108,30 @@ class BinaryTree {
       this.inOrder(node.right)
       console.log(node.data)
     }
+  }
+
+  toString() {
+    return this.getTreeStr()
+  }
+
+  getTreeStr(node = this.root, prefix = '', isLeft = false) {
+    if (node === null) {
+        return ''
+    }
+
+    let str = ''
+
+    if (node.right !== null) {
+        str += this.getTreeStr(node.right, prefix + (isLeft ? '│   ' : '    '), false)
+    }
+
+    str += prefix + (isLeft ? '└── ' : '┌── ') + node.data + '\n'
+
+    if (node.left !== null) {
+        str += this.getTreeStr(node.left, prefix + (isLeft ? '    ' : '│   '), true)
+    }
+
+    return str
   }
 }
 
