@@ -1,0 +1,11 @@
+P. Oliver, Fundamentals of Linux. Birmingham, UK: Packt, 2018.
+
+B. Frain, Responsive Web Design with HTML5 & CSS. Birmingham, UK: Packt, 2022.
+
+C.S. Roldan, React 18. Birmingham, UK: Packt, 2023.
+
+M. Cascariaro & L. Mammino, Node.js Design Patterns. Birmingham, UK: Packt, 2020.
+
+T. Hunter, Distributed Systems with Node.js. Sebastopol, CA, USA: O'Reilly, 2021.
+
+G. Laakmann, Cracking the Coding Interview. Palo Alto, CA, USA: CareerCup, 2019.

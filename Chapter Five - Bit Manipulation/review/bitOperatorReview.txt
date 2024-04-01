@@ -1,0 +1,174 @@
+Addition
+--------
+
+Doing additions is the same as with base ten but the carry is always a one. Remember that when the digits add up to three
+that means we leave a one and carry a one.
+
+1 + 1 -> 0 (Carry 1)
+1 + 0 -> 1
+0 + 0 -> 0
+0 + 1 -> 1
+
+  0110
++ 0010
+------
+  1000
+
+  0011
++ 0010
+------
+  0101
+
+  0110
++ 0110
+------
+  1100
+
+Subtraction
+-----------
+
+Doing subtraction is also the same but when we need to borrow we always borrow a value of two.
+
+1 - 1 = 0
+0 - 1 = 0 (Borrow 2)
+1 - 0 = 1
+0 - 0 = 0
+
+  0110
+- 0011
+------
+  0011    
+
+  1000
+- 0110
+------
+  0010
+
+Multiplication
+--------------
+
+Doing multiplication is also the same. We multiply the last digit of the second number against all the digits in the first number.
+We then repeat adding a placeholder of X for each remaining number. Then we add all the numbers together (see examples below).
+
+1 * 1 = 1
+1 * 0 = 0
+0 * 1 = 0
+0 * 0 = 0
+
+     0011
+   * 0101
+---------
+     0011
+    0000X
+ + 0011XX
+---------
+  0001111
+
+    0011
+  * 0011
+--------
+    0011
+ + 0011X
+--------
+   01001
+
+    0100
+  * 0011
+--------
+    0100
+ + 0100X
+--------
+   01100
+
+Logical Shift Right
+-----------
+
+We just shift the bits by n places and fill in the left most bits with zero.
+
+1101 >>> 2 = 0011
+
+Logical Shift Left
+-----------
+
+We just shift the bits by n places.
+
+1101 << 2 = 110100
+
+Arithemtic Shift Right
+-----------
+
+We just shift the bits by n places but fill in the left most bits with the sign bit.
+
+1101 >> 3 = 1111
+
+
+XOR (^)
+---
+
+If the inputs bits are the same the output is false. Otherwise the output is true.
+
+  1101
+^ 0101
+------
+  1000
+
+LOGICAL AND (&)
+-------
+
+If both bits are a one the output is a one.
+
+1 & 1 = 1
+1 & 0 = 0
+0 & 1 = 0
+0 & 0 = 0
+
+11001 & 10011 = 11011
+
+LOGICAL OR (|)
+-------
+
+If either bit is a one the output is a one.
+
+1 & 1 = 1
+1 & 0 = 1
+0 & 1 = 1
+0 & 0 = 0
+
+11001 & 10011 = 11011
+
+Negation/NOT (~)
+------------
+
+Negation means we just flip all the bits.
+
+~1 = 0
+~0 = 1
+
+~1101 = 0010
+
+Combinations
+------------
+
+1101 ^ (~1101)
+1101 ^ 0010      // Flip bits.
+1111             // Apply XOR.
+
+1011 & (~0 << 2)
+1011 & (1 << 2)  // Flip bits.
+1011 & 100       // Shift right.
+1000             // Logical AND.
+
+Two's Complement
+----------------
+
+Negative values are usually stored as the two's complement with an additional bit to indicate the sign.
+
+To calculate a negative number:
+(1) Flip all the bits.
+(2) Add one.
+(3) Add a one to the front to indicate the sign.
+
+3 -> 011
+100  // Flip bits.
+101  // Add one.
+1101 // Add a one for negative value sign.
