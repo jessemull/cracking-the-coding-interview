@@ -93,9 +93,25 @@ const decimalToBinaryStr = (dec) => {
   return (dec >>> 0).toString(2);
 }
 
+/**
+ * Often we need to iterate over each bit one by one. To iterate over
+ * each bit we loop until the number is equal to zero. For each iteration
+ * we do a logical AND with one to get the bit. We need to check if the bit
+ * is equal to zero, if it is not, we return one. Otherwise we return zero.
+ */
+const iterateOverBits = (num) => {
+  const bits = []
+  while (num !== 0) {
+    const bit = (num & 1) === 0 ? 0 : 1
+    bits.push(bit)
+    num = num >> 1
+  }
+  return bits
+}
 module.exports = {
   clearBit,
   decimalToBinaryStr,
+  iterateOverBits,
   getBit,
   setBit,
   updateBit
