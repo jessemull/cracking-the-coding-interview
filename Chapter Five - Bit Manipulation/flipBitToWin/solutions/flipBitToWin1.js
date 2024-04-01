@@ -41,7 +41,7 @@ const flipBitToWin = (num) => {
       // I think this code is too clever. Instead of keeping track of both 
       // previous and current we set previous to current and then set current
       // to zero. Once we see two zeros we have the total count in previous plus
-      // The zero in current.
+      // the zero in current.
       
       previous = next === 0 ? 0 : current    
       current = 0
