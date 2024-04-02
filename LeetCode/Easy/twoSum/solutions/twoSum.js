@@ -2,7 +2,7 @@
 // Make the key the current value and value the current index.
 // For each number check if the difference exists in the hash map.
 // If it exists we've found the answer.
-// If it doesn't exist store the difference.
+// If it doesn't exist store the value.
 
 const twoSum = (nums, target) => {
   // Check that the args are defined and we are within the bounds set by the problem.
@@ -45,7 +45,7 @@ const twoSum = (nums, target) => {
   }
 
   // No solution exists.
-  
+
   return null
 }
 
