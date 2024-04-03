@@ -1,7 +1,7 @@
 // Implement solution here.
 
-const eggDropProblem = () => {
-
+const eggDropProblem = (breakingPoint, numFloors) => {
+  
 }
 
 module.exports = eggDropProblem
