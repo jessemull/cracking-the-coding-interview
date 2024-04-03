@@ -1,7 +1,7 @@
 // Implement solution here.
 
-const theHeavyPill = () => {
+const poison = () => {
 
 }
 
-module.exports = theHeavyPill
+module.exports = poison

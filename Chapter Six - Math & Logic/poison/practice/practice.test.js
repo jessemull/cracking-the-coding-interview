@@ -1,8 +1,8 @@
 const assert = require('node:assert')
-const theHeavyPill = require('./practice')
+const poison = require('./practice')
 const test = require('node:test')
 
-test('theHeavyPill - []', () => {
-  const output = theHeavyPill()
+test('poison - []', () => {
+  const output = poison()
   assert.deepEqual(output, )
 })
