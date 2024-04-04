@@ -12,6 +12,11 @@ test(`longestPalindromicSubstring - [cbbd]`, () => {
   assert.deepEqual(output, 'bb')
 })
 
+test(`longestPalindromicSubstring - [ccc]`, () => {
+  const output = longestPalindromicSubstring('ccc')
+  assert.deepEqual(output, 'ccc')
+})
+
 
 test(`longestPalindromicSubstring - [null]`, () => {
   const output = longestPalindromicSubstring(null)
