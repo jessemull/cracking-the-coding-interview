@@ -1,7 +1,7 @@
 // Implement solution here.
 
-const longestPalindromicSubstring = (s) => {
+const reverse = (s) => {
 
 }
 
-module.exports = longestPalindromicSubstring
+module.exports = reverse
