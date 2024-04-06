@@ -52,13 +52,10 @@ class BlackJack {
   deal() {
     this.deck.shuffle().cut(this.deck.cards.length / 2)
 
-    for (let i = 0; i < this.numPlayers; i++) {
+    for (let i = 0; i < this.numPlayers + 1; i++) {
       const hand = new BlackJackHand(this.deck.deal(CARDS_PER_HAND))
       this.hands.push(hand)
     }
-
-    const dealer = new BlackJackHand(this.deck.deal(CARDS_PER_HAND))
-    this.hands.push(dealer)
 
     this.print()
   }
