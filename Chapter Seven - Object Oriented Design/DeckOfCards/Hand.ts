@@ -57,7 +57,7 @@ class BlackJackHand extends Hand {
 
   get total(): number {
     let total = 0
-    for (let [position, card] of this.cardMap) {
+    for (let [_, card] of this.cardMap) {
       total += card.rank <= 9 ? card.rank : 10
     }
     return total
