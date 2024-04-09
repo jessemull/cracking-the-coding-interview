@@ -15,11 +15,13 @@ class DeckOfCards {
 
   createDeck(): Card[] {
     let cards: Card[] = []
+
     this.cardFactory.suits.forEach(suit => {
       this.cardFactory.ranks.forEach(rank => {
         cards.push(this.cardFactory.create(suit, rank))
       })
     })
+
     return cards
   }
 
@@ -27,9 +29,12 @@ class DeckOfCards {
     if (index < 0 || index > this.cards.length) {
       throw new Error('INVALID INDEX')
     }
+
     const topHalf = this.cards.slice(0, index)
     const bottomHalf = this.cards.slice(index, this.cards.length)
+
     this.cards = [...bottomHalf, ...topHalf]
+
     return this
   }
 
@@ -37,10 +42,13 @@ class DeckOfCards {
     if (numCards === undefined || numCards === null) {
       throw new Error('INVALID CARD NUMBER')
     }
+
     if (this.cards.length < numCards) {
       throw new Error('NOT ENOUGH CARDS')
     }
+
     const hand: Card[] = []
+
     for (let i = 0; i < numCards; i++) {
       const card = this.draw()
       if (card !== null) {
@@ -48,14 +56,17 @@ class DeckOfCards {
         this.dealt.add(card)
       }
     }
+
     return hand
   }
 
   draw(): Card | null {
     const card = this.cards.pop()
+
     if (card !== undefined) {
       this.dealt.add(card)
     }
+
     return card || null
   }
 
@@ -67,11 +78,14 @@ class DeckOfCards {
     if (index < 0 || index > this.cards.length) {
       throw new Error('INVALID INDEX')
     }
+
     if (!this.dealt.has(card)) {
       throw new Error('DUPLICATE CARD')
     }
+
     this.cards.splice(index, 0, card)
     this.dealt.delete(card)
+    
     return this
   }
 

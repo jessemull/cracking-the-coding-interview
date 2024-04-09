@@ -1,14 +1,14 @@
-import Card from './Card.ts'
-import { RankMap, SuitMap } from './types.ts'
+import Card from './Card'
+import { RankMap, SuitMap } from './types'
 
-const SUITS = {
+export const SUITS = {
   1: 'CLUBS',
   2: 'DIAMONDS',
   3: 'HEARTS',
   4: 'SPADES'
 }
 
-const RANKS = {
+export const RANKS = {
   1: 'ACE',
   2: 'TWO',
   3: 'THREE',
@@ -39,7 +39,7 @@ class CardFactory {
     }
 
     if (this.rankMap[rank] === undefined) {
-      throw new Error('INVALID CARD')
+      throw new Error('INVALID RANK')
     }
     
     const position = (suit - 1) * this.ranks.length + rank

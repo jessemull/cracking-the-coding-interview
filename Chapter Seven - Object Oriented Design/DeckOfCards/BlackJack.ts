@@ -26,7 +26,7 @@ class BlackJack {
     const dealerTotal = this.hands[this.hands.length - 1].total
     const dealerBusted = this.hands[this.hands.length - 1].busted
 
-    console.log('**************************************\n')
+    console.log(`**************************************\n`)
 
     for (let i = 0; i < this.hands.length - 1; i++) {
       const playerTotal = this.hands[i].total
@@ -46,7 +46,7 @@ class BlackJack {
       }
     }
 
-    console.log('\n**************************************\n')
+    console.log('\n\n')
   }
 
   deal() {
@@ -82,17 +82,14 @@ class BlackJack {
 
     this.hands.forEach((hand, index) => {
       const name = index === this.hands.length - 1 ? 'Dealer' : `Player ${index + 1}`
-      this.printHand(name, hand)
+      const score = `Score: ${hand.busted ? 'Busted!' : hand.total}\n`
+      console.log(name)
+      console.log('---------------------')
+      console.log(hand.toString())
+      console.log(score)
     })
     
     console.log('**************************************\n')
-  }
-
-  printHand(player, hand) {
-    console.log(player)
-    console.log('---------------------')
-    console.log(hand.toString())
-    console.log(`Score: ${hand.busted ? 'Busted!' : hand.total}\n`)
   }
 
   reset() {
