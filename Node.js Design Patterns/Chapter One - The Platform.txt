@@ -1,0 +1,54 @@
+What are the most important ideas behind the Node.js philosophy?
+1. Simple modules.
+   (a) 'Small is beautiful!'
+   (b) Do on things well.
+   (c) Easy to maintain.
+   (d) Easy to understand.
+   (e) Easy to use.
+   (f) Easy to implement.
+   (g) Keep things small for the browser.
+2. Small footprint.
+   (a) KISS -> 'Keep things simple stupid.'
+   (b) 'Worse is better.'
+   (c) Easy to maintain.
+   (d) Easy to understand.
+   (e) Easy to use.
+   (f) Easy to implement.
+3. Asynchronous and non-blocking first (see below).
+
+How does Node.js work?
+1. Multiplexing -> Combining multiple signals into one in order to increase efficiency of transmission.
+2. De-multiplexing -> Spliting a part a signal into its component parts.
+3. I/O operations are expensive and blocking.
+   (a) Other languages use multi-threading to handle I/O operations. Spinning up a new thread to handle each operation.
+   (b) Node.js uses the reactor pattern which consists of an event de-multiplexer and an event queue.
+4. The reactor pattern:
+   (a) The application requests an 1/O operation.
+   (b) The I/O operation is sent to the event de-multiplexer which attaches a handler and immediately transfers control back to the application (non-blocking).
+   (c) When an I/O operation completes, the event de-multiplexer sends an event to the event queue.
+   (d) The event queue iterates through all the events.
+   (e) For each event, the application invokes the handler, which in turn can produce more I/O events sent to the de-multiplexer.
+   (f) When all of the I/O operations have been processed by the event de-multiplexer and all of the events have in the event queue have been processed, the application exits.
+5. Libuv is the I/O engine of the Node.js platform.
+   (a) Abstracts out I/O operations by providing an interface for each operating system.
+   (b) Includes the event queue, event de-multiplexer and related code.
+6. Node.js platform consists of:
+   (a) Core node.js libraries.
+   (b) Bindings (interface) between the core libraries and libuv.
+   (c) The libuv I/O engine.
+   (d) The V8 engine.
+       (i) The V8 engine is the headless version of the Javascript engine that runs chrome.
+7. Differences between running Javascript in the browser vs on the server.
+   (a) Browser
+       (i) Window/document objects.
+       (ii) No access to I/O operations or the underlying operation system for security purposes.
+       (iii) Use of polyfills for cross-browser compatibility.
+       (iv) Use of transpilation to ensure modern Javascript runs on old browser versions.
+       (v) Modules can be downloaded from remote resources (do not have to be on file system).
+   (b) Server
+       (i) No window/document objects.
+       (ii) Access to the underlying operating system.
+       (iii) Modules must be located in file system.
+8. Node.js can run native C/C++ and other code using the N-API interface.
+   (a) This is useful because node can run native operating system packages.
+   (b) Has led to adoption of node.js for the IoT.
