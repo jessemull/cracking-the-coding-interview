@@ -1,0 +1,248 @@
+What are the two types of modules available to the Node.js platform?
+1. CommonJS
+2. ECMAScript (ESM)
+
+Why do we need modules?
+1. Split the codebase into multiple files.
+2. Re-use the codebase.
+3. Makes testing things in isoluation easier.
+4. Encapsulation.
+5. Dependency management.
+6. Maintainability.
+
+What is the difference between a module and module system?
+1. Module -> a unit of code or software.
+2. Module system -> the syntax and tooling that defines how modules are created and used.
+
+What is the history of modules in Javascript?
+1. Originally there was no need to have modules. Code running in the browser was simple.
+2. Code could be separated by loading different script tags for different files.
+3. Everything was in the global scope making collisions likely.
+4. The first module systems were AMD and UMD asynchronous/unversal module definition.
+5. Closely related was the concept of an immediately invoked function expression (IIFE).
+   (a) (() => {
+         var private = 'private'
+         var public = private + 'public'
+         return public
+       })()
+   (b) In the above expression only the variables returns from the function are accessible.
+   (c) Allows for private data and prevents polluting the global scope.
+6. From its inception, Node.js used the CommonJS module pattern.
+7. ECMAScript modules were introduced with ECMAScript6 to try to standardize modules across the server and browser.
+8. IIFEs are the pattern used by CommonJS.
+
+How does CommonJS work?
+1. The require function is used to load the module.exports from a module.
+2. The module function takes a name as an input.
+3. It then resolves the full path to the file using the name and stores it as an ID.
+4. It creates a module object with an empty object for the module exports and the ID.
+5. A cache is checked to see if the module is already loaded, if it is loaded it return the module.exports to the caller.
+6. If it is not loaded, it reads the file from the file system using the ID (path) and then calls eval on the data.
+7. The module object's exports are replaced by the file's module.exports.
+8. The module is then cached and the exports are returned to the caller.
+
+Why do we need to use module.exports and not exports to grab our dependencies?
+1. In the above description, we can see that exports is just an empty object until it is populated by module.exports when loading the module.
+
+Why is loading modules / require a synchronous operation?
+1. Original it was not synchronous but it caused too many complications.
+2. Using asynchronous loading, the caller always has to check whether or not the module has actually been loaded.
+3. There are advanced techniques to load modules asynchronously using both CJS and ESM.
+
+How does CommonJS resolve names?
+1. File modules - uses relative './module' or absolute '/module' paths.
+2. Core modules - first searches in Node.js core modules.
+3. Package modules - if nothing is found in the core modules, moves up the directory hierarchy until it reaches the root checking in any directory named node_modules.
+4. Node.js tries to match the file to load using the following rules:
+   (a) <moduleName>.js.
+   (b) <moduleName>/index.js.
+   (c) Directory specified in package.json.
+5. The node_modules directory is the target for package installation.
+   (a) Each package can have its own private dependencies.
+   (b) Each package can have different version of the same dependency.
+   (c) This strategy avoids collisions.
+
+How are circular dependencies resolved?
+1. CommonJS require can lead to circular dependencies.
+2. When a dependency is loaded, a boolean flag is set.
+3. If circular dependencies exist e.g. depA require depB and depB requires depA, depending on the order in which they are loaded they may see different version of the same package.
+
+What are the patterns for handling exports?
+1. Named exports:
+   module.exports.info = (msg) => console.log(`info: ${msg}`)
+   const logger = require('./logger')
+   logger.info('Hello world!')
+2. Function exports:
+   module.exports = (msg) => console.log(`verbose: ${msg}`)
+   const logger = require('./logger')
+   logger('Hello world!')
+3. Class exports:
+   class Logger {
+      constructor(name) {
+        this.name = name
+      }
+      info(msg) {
+        console.log(`info: ${msg}`)
+      }
+    }
+    module.exports = Logger
+    const Logger = require('./logger')
+    const logger = new Logger()
+    logger.info('Hello world!')
+4. Instance exports:
+   class Logger {
+      constructor(name) {
+        this.name = name
+      }
+      info(msg) {
+        console.log(`info: ${msg}`)
+      }
+    }
+    module.exports = new Logger('INFO')
+    const Logger = require('./logger')
+    logger.info('Hello world!')
+5. Exporting a function is a good way to use the single responsibility principle (SRP).
+6. Exporting a singleton using the instance export pattern is a good way to have the same instance be used across an application.
+   (a) However, because of how CommonJS loads dependencies (see above) it doesn't guarantee that the same dependency is not loaded twice leading to two instances.
+   (b) In addition, Javascript is permissive and you can create a new instance by accessing the contructor e.g. new logger.constructor('ERROR').
+
+What is monkey patching?
+1. Monkey patching is a workaround to change or patch the required module at run time.
+2. It is dangerous because multiple patches could be applied leading to different behaviors.
+3. It obfuscates the actual functionality and intent of the original package.
+
+// patcher.js
+
+require('./logger').info = (msg) => console.log(`New info: ${msg}`)
+
+// main.js
+
+const logger = require('./patcher')
+
+What are ESM modules?
+1. Specification introduced in ECMAScript6 to try to standardize module systems across the browser and server.
+2. Supports asynchronous module loading.
+3. Supports cyclical dpendency management.
+4. The most important difference between ESM and CJS is that ESM imports are static.
+   (a) Import statements must be done outside the flow of control at the top of the file.
+   (b) Allows for static analysis like tree shaking.
+5. By default, Node.js uses CJS. To use ESM you must:
+   (a) Give the module a filename extension of .mjs.
+   (b) Set the 'type' key to a value of 'module' in the closest package.json file.
+6. Uses the import keyword to import entities.
+   (a) Can use * pattern to import all entities and change the namespace.
+       import * as infoLogger from './logger'
+   (b) Can use brackets to import named entities.
+       import { logger } from './logger'
+   (c) Can use the as keyword to rename a named entity.
+       import { logger as infoLogger } from './logger'
+   (d) Can import the single default export (see below).
+       import defaultLogger from './logger'
+   (e) Can import both the default and named entities (see below).
+       import defaultLogger, { infoLogger } from './logger'
+7. Uses the export keyword to export entities.
+   (a) Can export named entitites.
+       export const logger = new Logger() OR export { logger, infoLogger }
+   (b) Can use the default keyword to export a default unnamed entity.
+       export default logger
+8. Generally using named exports is preferred because it allows for static analysis.
+   (a) Tree shaking.
+   (b) Editor auto-complete.
+   (c) Other.
+9. Anything that is not an export is private by default.
+10. Module identifiers are different that CJS.
+    (a) Can use relative path e.g. './logger' or '../logger'.
+    (b) Can use an absolute path using the file:/// prefix e.g. 'file:///opt/node.js/config.js'.
+    (c) Can use a base path for packages installed into node_modules e.g. 'http'.
+    (d) Can use a deep path for importing specific file inside of node_modules e.g. 'http/logger/logger.js'.
+    (e) Can use a URL in the browser (but not on the server) e.g. 'https://unpkg.com/lodash'.
+11. Support dynamic or asynchronous imports.
+    (a) Return a promise.
+    (b) Useful when need to load a module from the file system or otherwise at run time.
+    const lang = process.argv[2]
+    const languageModule = `language-${lang}`
+    import(languageModule).then((strings) => console.log(strings.HELLO))
+
+How does ESM load modules?
+1. Creates a directed dependency graph.
+2. Three stages:
+   (a) Construction - starting at a single entry point find all the imports and recursively load the content of every module from the respective files.
+   (b) Instantiation (linking) - create a named reference in memory for all exported entities but don't fill them in yet. Do the same for all export and import statements.
+   (c) Evalution - execute the code and fill in all the references in memory.
+3. The three stages can be thought of as finding the dots, connecting the dots and walking through the paths in the correct order.
+4. ESM uses read-only live bindings. 
+   (a) This means ONLY the things explicitly exported can be manipulated. Trying to do otherwise results in an error.
+   (b) This is fundamentally different than CJS where the entire exports object is attached to the required dependency.
+   // counter.js
+   let count = 0
+   const increment = () => {
+    count++
+   }
+   export { count, increment }
+
+   // example.js
+   import { count, increment } from './counter'
+   increment()
+   console.log(count) // 1
+   count++ // throws error because it is a const
+5. The static nature of ESM modules prevents any side affects from cyclical dependencies.
+   (a) In the instantiation phase, we build a depth-first dependency graph.
+   (b) While building this dependency graph, any node already visited won't be traversed again.
+   (c) This is independent of the evaluation phase, so the order the dependencies are loaded in is always consistent (unlike for CJS modules).
+
+How does monkey patching still work even in ESM?
+1. Because Javascript is so permissive, at first it looks like read-only live bindings prevent monkey patching.
+2. However, we are able to override any property on an exported object.
+3. This does not work if we use the * notation or try to directly override a named import because of the read only bindings.
+
+// monkey-patch.js
+
+import logger from './logger'
+logger.info = (msg) => {
+  console.log(`Monkeys go bananas: ${msg}`)
+}
+export default logger
+
+// main.js
+
+import logger from './monkey-patch'
+logger.info('Hello world!) // Monkeys go bananas: Hello world!
+
+// bad-monkey-patch.js
+
+import * as logger  from './logger'
+logger.info = () => {} // Throws read only error
+
+// bad-monkey-patch.js
+
+import { logger } from './logger'
+logger.info = () => {} // Throws read only error 
+
+What are the differences between ESM and CJS?
+1. ESM is static and allows for static analysis like tree shaking.
+2. ESM is more stable for handling cyclical dependencies.
+3. ESM has read-only bindings.
+4. ESM runs explicitly in strict mode without have to add 'use strict'.
+5. In ESM some CJS references are not defined:
+   (a) exports
+   (b) module
+   (c) __filename
+   (d) __dirname
+6. In ESM you can use the import.meta.url to get the current file path.
+   import { fileURLToPath } from 'url'
+   import { dirname } from 'path'
+   const __filename = fileURLToPath(import.meta.url)
+   const __dirname = dirname(__filename)
+7. In ESM you can create the require function.
+   import { createRequire } from 'module'
+   const require = createRequire(import.meta.url)
+8. In ESM this is undefined but in CJS this refers to the exports object.
+9. You can import CJS modules into ESM using the default syntax but you cannot import ESM modules into CJS.
+   import logger from './commonjsmodule.js' // okay
+   import { logger } from './commonjsmodule.js' // error
+10. In CJS you can import JSON files directly.
+    const data = require('./json-data') // okay
+    import data from './json-data' // error
+
+
+   
