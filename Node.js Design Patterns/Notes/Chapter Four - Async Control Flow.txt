@@ -1,0 +1,144 @@
+Why can async code get out of hand?
+1. Implementing clean asynchronous code is difficult.
+2. Tendency is to use anonymous functions and closures to keep data in scope which can lead to:
+   (a) Callback nesting.
+   (b) Functions growing in size.
+   (c) Poor code organization.
+   (d) Hard to read indentation.
+   (e) Similar variable names e.g. err1, err2, err3.
+   (f) Memory leaks, any active part of the large closure keeps it in memory.
+3. 'Pyramid of doom!'
+
+What are the principles we can use to write clean asynchronous code?
+1. Exit as soon as possible using return, continue or break (early return principle).
+2. Create named functions for callbacks rather than nesting them.
+   (a) Pass intermediate data as arguments.
+   (b) Keep things out of closures.
+   (c) Helps with stack traces.
+3. Modularize by splitting up functions and creating modules.
+4. When using the above principles, rarely do we need external libraries to achieve clean code.
+
+What is sequential execution?
+1. There are several types of sequential execution:
+   (a) Executing a set of tasks in sequence w/o propagating data between them.
+   (b) Using the output of one task as the input to another task (piping, chaining, waterfalls).
+   (c) Iterating over a collection while running an async task on each element.
+
+*** Sequential Execution Patter ***
+
+function task1(cb) {
+  asyncOp(() => {
+    task2(cb)
+  })
+}
+
+function task2(cb) {
+  asyncOp(() => {
+    task3(cb)
+  })
+}
+
+function task3(cb) {
+  asyncOp(() => {
+    cb()
+  })
+}
+
+task1(() => {
+  // Executed when all tasks complete.
+})
+
+*** Sequential Iterator Pattern ***
+
+const tasks = [...]
+
+function iterate(index) {
+  if (index === tasks.length) {
+    return finish()
+  }
+  const task = tasks[index]
+  task(() => iterate(index + 1))
+}
+
+function finish() {
+  // Iteration completed.
+}
+
+iterate(0)
+
+Using this method we can:
+1. Map the values of an array asynchronously.
+2. Pass the results of an operation to the next one in the iteration to implement an asynchronous verion of reduce.
+3. Quit the loop prematurely if a particular condition is met.
+4. Iterate over infinite number of elements.
+
+*** Parallel Execution Pattern ***
+
+const tasks = [...]
+
+let completed = 0 
+
+tasks.forEach(task => {
+  task(() => {
+    if (++completed === tasks.length) {
+      finish()
+    }
+  })
+})
+
+function finish() {
+  // Executes when all tasks are completed.
+}
+
+What is parallel execution?
+1. Sometimes the order tasks are executed doesn't matter.
+2. Running tasks in parallel can lead to race conditions e.g. conflicts accessing resources.
+3. One of the strengths of node.js is that it is single threaded and we can avoid using constructs like locks, mutexes, semaphores and monitors.
+4. The above does not mean there are not race conditions, for example two asynchronous tasks could try to download the same file.
+5. The solution to conditions like the above is to just keep track of which files we are considering by storing them in a set and making it available in a closure or as an argument.
+6. We can check the set for the filename before download and not perform the download.
+7. This code is readable and easy to maintain.
+
+What is limited parallel execution?
+1. Spawning tons of parallel tasks without control can lead to excessive load.
+2. It may result in running out of resources.
+3. We need to limit the number of parallel tasks.
+4. Spawn as many tasks as we can initially up to the limit.
+5. Once a task completes, we spawn additional tasks up to the limit again.
+
+*** Limited Parallel Execution Pattern ***
+
+const tasks = [...]
+
+const concurrency = 2
+let running = 0
+let completed = 0
+let index = 0
+
+function next() {
+  while (running < concurrency && index < tasks.length) {
+    const task = tasks[index++]
+    task(() => {
+      if (++completed === tasks.length) {
+        return finish()
+      }
+      running--
+      next()
+    })
+    running++
+  }
+}
+
+next()
+
+function finish() {
+  // Executes when all tasks have finished.
+}
+
+*** TaskQueue ***
+
+See the task queue implementation in the problem sets and examples directory.
+
+*********************************************************************************************************
+* All of the above patterns are included in the async package which is the defacto standard for node.js *
+*********************************************************************************************************
