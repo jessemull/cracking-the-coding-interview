@@ -1,0 +1,92 @@
+What is the difference between synchronous and asynchronous programming?
+1. In synchronous programming, all statements are executed one by one and one operation completes before the next.
+2. In asynchronous programming, a mechanism exists to notify the calling function when an operation completes.
+   (a) The most basic mechanism for asynchronous programming is the callback.
+   (b) Callbacks are the basis for promises and async await.
+
+What is a callback?
+1. A callback is function passed as an argument to another function used to propagate the results of an operation.
+2. In Javascript, functions are first class citizens.
+   (a) Can be passed as arguments to another function.
+   (b) Closures provide a way of preserving a reference to the environment the function was created in.
+3. Callback based programming is also called continuation passing style (CPS).
+
+What is the difference between synchronous and asynchronous callbacks?
+1. const cpsSync(a, b, cb) => cb(a + b)
+2. const cpsAsync(ab, b, cb) => setTimeout(() => cb(a + b))
+3. In the second example control is given back immediate to the caller and the operation within set timeout occurs later.
+4. This can change the order of operations.
+
+Why are functions that exhibit both synchronous and asynchronous behavior so dangerous?
+1. Lead to incredibly inconsistent and unpredictable behavior.
+2. 'Unleashing Zalgo!'
+3. Can convert an mixed function to a synchronous one by using synchronous APIs.
+   (a) May slow down the application due to blocking operations.
+   (b) An API for a synchronous operation may not be available.
+   (c) Counter intuitively we need to update the surrounding code to handle the synchronous behavior.
+   (d) Usually frowned upon because it break the concurrency model.
+   (e) Only use synchronous operations sparingly and when necessary.
+   (f) Good example is loading a configuration file during bootstrap.
+4. Can convert a mixed function to an asynchronous one by using process.nextTick, setTimeout or setImmediate.
+
+What is the difference between process.nextTick, setTimeout and setImmediate?
+   (a) process.nextTick (microtask) is executed before any I/O operations in the event queue.
+   (b) setImmediate is executed after all I/O operations in the event queue.
+   (c) setTimeout is executed ahead of all I/O operations in the event queue but after micro-tasks.
+
+What are the callback conventions?
+1. The callback is always passed as the last argument to a function.
+2. Errors are always passed as the first argument to a callback.
+3. If there are no errors, pass null or undefined.
+4. Always check for an error.
+5. Always use try/catch blocks to catch additional errors and propogate them.
+6. Never throw another error, in CPS style of programming errors must be propagated back to the caller.
+
+const readJSON(filename, cb) => {
+  let parsed
+  readFile(filename, 'utf8', (err, data) => {
+    if (err) {
+      return cb(err)
+    }
+    try {
+      parsed = JSON.parse(data)
+    } catch (err) {
+      return cb(err)
+    }
+    cb(null, parsed)
+  })
+}
+
+What is the observer pattern?
+1. An object that can notify a set of listeners when a change in state occurs.
+2. A callback can only notify one listener but an event emitter can notify many listeners.
+3. The observer pattern is implemented in Node.js in the core libraries available by importing the EventEmitter class from the 'events' package.
+4. The core functions in the EventEmitter class:
+   (a) on - register a new listener for a specific event.
+   (b) once - register a new listener for a specific event and automatically remove it when the event occurs once.
+   (c) emit - products an event and provides additional arguments to the event handler.
+   (d) removeListener - removes the event listener for the specified event type.
+5. The EventEmitter class allows chaining by always returning the EventEmitter.
+6. Propogating errors using an EventEmitter occurs by emitting the 'error' event and passing an Error object as an argument.
+7. If no listener exists for the error event, a special exception is thrown and the application will exit.
+8. Always register an error listener.
+9. Usually the EventEmitter class is not used directly but is extended.
+
+Why are EventEmitters the most common source of memory leaks in an application?
+1. Unsubscribed event listeners are the most common source of application memory leaks.
+2. Each listener must be removed or it will remain in memory.
+3. Generally listeners are removed by catching a subsequent event that is emitted.
+4. If an emitter has more than ten listeners attached, a special warning event is emitted.
+5. The number of maximum listeners can be set using setMaxListeners.
+
+Why should you avoid synchronous events?
+1. Using asynchronous events, all the listeners can be attached after emitting the event because they are added before the next execution of the event loop.
+2. Using synchronouse events, we HAVE to register all the listeners before any event is emitted or we will miss the event.
+3. In general, synchronous events lead to side affects and unpredictable behavior releasing Zalgo.
+
+When should a callback be used and when should an event emitter be used?
+1. Callbacks can only notify one listener while event emitters can notify many.
+2. Event emitters should be used when an event can occur multiple times.
+3. Event emitters should be used when there are multiple event types that can occur (can be handled with multiple callbacks but messy).
+
+
