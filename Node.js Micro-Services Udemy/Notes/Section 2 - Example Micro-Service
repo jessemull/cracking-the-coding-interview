@@ -1,0 +1,20 @@
+Making a Blog Post Application
+1. Functionality
+   (a) Allow user to post a new entry.
+   (b) Display the posts.
+   (c) Allow users to make comments.
+2. Create a separate service for each resource.
+   (a) Posts.
+       i.   Create posts.
+       ii.  List all posts.
+       iii. GET /posts: route for retreiving all posts.
+       iv.  POST /posts: create a post.
+   (b) Comments.
+       i.  Create a comment.
+       ii. List all comments.
+3. Event Buses
+   (a) RabbitMQ, Kafka, NATS
+   (b) Receives events and publishes them to listeners.
+   (c) De-couple synchronous requests by using an event based system.
+4. For the first go-round, we will roll our own simple event bus.
+5. In the production grade example, we will use a production ready event bus.

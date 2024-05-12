@@ -1,0 +1,48 @@
+What is a micro-service?
+  1. A monolith contains all the routing, middleware, business logic and database access code required to implement ALL features of an application.
+  2. In contrast, a single micro-server contains all the routing, middleware, business logic and database access code required to implement ONE feature of an application.
+  3. Monolith vs micro-service -> all features vs single feature.
+  4. Advantage is that if one part of the application (one micro-service) crashes, the rest of the application still works correctly.
+
+Problems w/ Micro-Services
+  1. Difficult to manage data between services.
+  2. This is a huge problem and 90% of problem solving with micro-services is learning how to manage data between services.
+    (a) Each service has its own database (design pattern called database-per-service).
+    (b) Services will never reach into another service's database.
+    (c) We want each service to run independently of other services.
+    (d) The database schema may change unexpectedly (then we need to update multiple services if they share a database to avoid breaking changes).
+    (e) Some services function more efficiently using different types of databases e.g. PostgreSQL vs DynamoDB.
+  3. General strategies to communicate between services.
+    (a) Synchronous - services communicate with each other using direct requests.
+    (b) Asynchronous - services communicate with each other using events.
+    (c) Synchronous direct requests:
+        i.   Conceptually easy to understand.
+        ii.  Services don't necessarily need a database to just communicate across services.
+        iii. Introduces a dependency between services e.g. service A calls B, C & D. This means if B, C or D fails service A fails as well.
+        iv.  If any inter-service requests fail, the inter-dependent request fails as well.
+        v.   The entire request is only as fast as the slowest request.
+        vi.  Can introduct a web of dependencies that can spin out of control e.g. behind the scenes on inter-dependent request leads to more inter-dependent requests.
+    (d) Aysynchronous event bus only:
+        i.    Create an event bus accessible to all micro-services that handle events/notifications emitted from our services.
+        ii.   Each service can receive or emit events to the event bus.
+        iii.  Not easy to understand.
+        iv.   Services don't necessarily need a database to just communicate across services.
+        v.    If any inter-service requests fail, the inter-dependent request fails as well (e.g. event is not emitted).
+        v.    The entire request is only as fast as the slowest request.
+        vi.   Can introduct a web of dependencies that can spin out of control e.g. behind the scenes on inter-dependent request leads to more inter-dependent requests.
+        vii.  The entire request is only as fast as the slowest request.
+        viii. Will rarely see in the wild! Has all the disadvantages of synchronous communication plus additional complexity.
+    (d) Asynchronous event bus plus separate databases:
+        i.   Seems sort of bizarre and inefficient at first glance.
+        ii.  We create a central data store.
+        iii. We create an event bus.
+        iv.  When an update occurs, each service saves the data into their own database.
+        v.   However, each service also emits an event to the event bus (event broker).
+        vi.  Other databases can subscribe to these changes and then update their own database to keep things in sync.
+    (e) In general using modern asynchronous architecture has huge advantages:
+        i.  Services don't have any inter-dependencies.
+        ii. Services will be extremely fast.
+    (f) However, there are some disadvantages:
+        i.  Lots of data duplication.
+            (a) Storage is generally cheap if you use a cloud service provider.
+        ii. Harder to understand.
