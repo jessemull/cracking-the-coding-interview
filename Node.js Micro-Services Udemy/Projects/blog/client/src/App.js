@@ -7,8 +7,12 @@ const App = () => {
   const [posts, setPosts] = useState([])
 
   const fetchPosts = async () => {
-    const res = await axios.get('http://localhost:4002/posts')
-    setPosts(Object.values(res.data))
+    try {
+      const res = await axios.get('http://localhost:4002/posts')
+      setPosts(Object.values(res.data))
+    } catch(err) {
+      console.error(err)
+    }
   }
 
   useEffect(() => {

@@ -18,3 +18,45 @@ Making a Blog Post Application
    (c) De-couple synchronous requests by using an event based system.
 4. For the first go-round, we will roll our own simple event bus.
 5. In the production grade example, we will use a production ready event bus.
+6. Moderation
+   (a) Use a service for comment filtering.
+   (b) Three states (1) processing (2) approved (3) rejected.
+   (c) Need to add an additional flag for the status to keep track.
+   (d) Approach #2 (A better option):
+       i.   Create a moderation service to filter the comments.
+       ii.  Moderation service caches the create comment event.
+       iII. Moderation service then approves the comment and emits the comment moderated event with the status (approved/rejected).
+       iv.  The query service then grabs the notification and updates the comment with the status.
+       v.   While the query service has not received the comment moderated event the comment is in pending status.
+   (e) Approach #1 (Not a great option):
+       i.   Create a moderation service to filter comments.
+       ii.  Only the moderation service catches the create comment event.
+       iii. Moderation service then approves the comment and emits the comment moderated event with the status (approved/rejected).
+       iv.  The query service then grabs the notification and updates the comment with the status.
+       v.   While the query service has not received the comment moderated event the comment is just missing.
+   (f) Approach #3 (The best solution):
+       i.   Create a moderation service to filter comments.
+       ii.  Moderation service catches the create comment event.
+       iii. Moderation service then approves the comment and emits the comment moderated event with the status (approved/rejected).
+       iv.  The comments service then grabs the notification and updates the comment with the status.
+       v.   The comments service then emits a comment updated event.
+       vi.  They query service catches the comment updated event and updates the comment.
+       vii. In this way all the logic for handling comments lives in the comments service.
+   (e) Domain specific vs generic event.
+7. Dealing with missing events.
+   (a) How do we get a new service into sync with other services if they missed all the events?
+   (b) What if a service goes down and misses events?
+   (c) Option #1 - Use synchronous requests.
+       i.   Service asks other services directly for all the data.
+       ii.  Stores/merges all data and stores it.
+       iii. Back to synchronous coupling with all the problems associated above.
+   (d) Option #2 - Direct database access.
+       i.   Service just dips into the data store.
+       ii.  Stores/merges all data and stores it.
+       iii. May have to deal with lots of different database interfaces.
+   (e) Option #3 - Use an event bus data store.
+       i.   All the events are stored into the data bus store.
+       ii.  Ask the event bus for all the events stored.
+       iii. Merge/use the events as necessary.
+       iv.  Don't need to write any extra code. Just handle events normally.
+       v.   Data storage is pretty cheap in cloud services so storing all the events may not have a large cost associated with it.
