@@ -1,0 +1,37 @@
+Naive Approach to Using A Virtual Machine
+1. Transfer all our source code onto the machine.
+2. Run the source code the same way we are running it locally.
+3. This scenario works but it doesn't scale correctly.
+4. What if we need more copies of a service to handle the load?
+   (a) Create more services.
+   (b) Load balance across the services.
+   (c) We would need new ports for each new service copy on the machine.
+   (d) Event bus would need to then know the new ports and be updated each time a new copy of a service was created.
+5. What if the new copies of services overload the virtual machine itself?
+   (a) Now we need to add a second virtual machine.
+   (b) Event bus would now need to know the ports and new IP addresses and be updated each time a new virtual machine was created.
+6. What if there is a really heavy load at only certain times of the day?
+   (a) We may need to remove a virtual machine or services.
+   (b) The event bus would now need conditional logic based on the time of day to know which services and virtual machines to connect to.
+7. Taken together, this adds a huge amount of complexity to the event bus we don't want to manage.
+8. The answer is docker + kubernetes!
+
+Why use docker?
+1. Docker creates a series of containers.
+2. A container is an isolated computing environment.
+3. A separate container can be used for each service.
+4. If we need multiple copies of one service, we start up another docker container.
+
+What are the advantages of docker?
+1. Containers contain everything we need to run our application (dependencies).
+2. Containers contain everything we need to start our application (commands).
+
+Why use kubernetes?
+1. A tool for container orchestration (running multiple containers).
+2. Configures how the containers run and interact with each other.
+3. Creates a set of virtual machines called a cluster.
+4. Each virtual machine is called a node.
+5. A master is a program to manage everything ni the cluster.
+6. A configuration file might say (1) run two copies of our service (2) allow these copies to be accessible from the network.
+7. Instead of being aware of all the nodes in the cluster, requests are sent to a central communication channel which handles the requests for the service.
+

@@ -1,0 +1,84 @@
+What problem is docker trying to solve?
+1. Consistency in environment.
+2. Example is just installing a piece of software on your local machine.
+   (a) Installation may result in machine specific errors.
+   (b) We solve the error and another crops up.
+   (c) Instead provide a consistent environment that matches the application requirements and experience no issues!
+
+What is docker?
+1. Uses an image - single file with all the dependencies and configuration required to run a specific program.
+2. Creates containers - each container is an instance of an image running a program.
+3. Each container has an isolated set of memory and configuration.
+
+What is a container?
+1. Overview of an operating system.
+   (a) Kernel - process that governs access between all programs running on your machine and the actual hardware.
+   (b) E.g. NodeJS asks Kernel to write a file to the hard disk. Kernel actually does the write to the hard disk.
+   (c) Kernel requests are called system calls.
+   (d) Kernel sits between the application and the CPU/Hard Disk/Memory.
+2. Example.
+   (a) Two applications want to use python.
+   (b) Each needs a different version.
+   (c) Hard disk has version one but not version two.
+   (d) Only one application can run.
+   (e) We can use name spacing to run both versions adding both to the hard disk and reference them by name.
+   (f) Can use resource groups to limit the amount of resources an application has access to.
+3. Containers solve the above by providing a grouping of resources specifically assigned to it.
+4. Application sends system call to the Kernel. The Kernal directs the call to a portion of the hard disk, memory and CPU.
+5. The image contains specific software and a startup command.
+6. On start up, the Kernel makes just a slice of the hard disk, memory and CPU available to the container.
+7. This small section of the hard drive has ONLY the software on the container installed.
+8. The start command starts up the software and runs it using those specific resources.
+9. If you are using a container that needs to run on linux, docker uses a virtual machine to run the container.
+
+Fun commands to try...
+1. docker run <containername> <overridecommand> -> runs container and executes an optional override command.
+2. docker ps -> display running containers (container ID, image, command, time up, exposed ports names).
+3. docker ps --all -> displays all containers you've run on the machine.
+4. docker create -> creates a container and outputs the container ID.
+5. docker start -a <containerid> -> start the container with the given ID. The -a option makes it so that docker prints the output to the terminal.
+6. docker system prune -> delete all the containers on your machine and the build cache so you will need to re-download the image from docker hub.
+7. docker logs <containerid> -> prints out all the logs associated with the container.
+8. docker stop <containerid> -> stops the container and allows it to shut down using normal process.
+9. docker kill <containerid> -> uses SIGINT to kill the container and doesn't allow shut down process.
+10. docker exec -it <containerid> <command> - executes the command inside the container. The i flag means attach our terminal to the stdin process of the container. The t flag makes sure that stdout goes to your terminal and is formatted correctly.
+11. docker exec -it <containerid> sh - get a shell for the container. Use ctrl+D to get out of terminal/container. Can also probably run bash shell (check docs).
+12. docker build -t <tagname> <dockerfile/directory> - tags the built image with a name.
+13. docker commit -c 'CMD ["my-command"]' <containerid> - shorthand for not using dockerfile and instead just generating snapshot of running container.
+14. docker run -p <machineport>:<containerport> <containerid> - maps the exposed port in the container to the local port.
+
+What is the lifecycle of a container?
+1. Creating a container and starting a container are two separate processes.
+2. docker run === docker create && docker start.
+3. Docker creates a snapshot from the image and then runs the start command.
+4. The override command is set when creating the container.
+5. Once the container is created, we can't overrun it again when running docker start.
+6. When running docker stop, docker waits 10 seconds to allow the container to shut down and then kills it with SIGINT.
+
+What is a DOCKERFILE?
+1. Configures a container.
+2. Sent to docker server.
+3. Docker server uses the configuration to create a new container.
+4. Specify base image.
+5. Run commands (e.g. install dependencies).
+6. Specify a start up command.
+7. FROM/RUN/CMD are the most important commands to understand.
+8. FROM -> Use this base image.
+9. RUN -> Run this command inside the container.
+10. CMD -> Run this start up command.
+11. Using the FROM command just makes it easy to have most of the things we need to run our applications pre-installed. E.g. operating system, package manager etc.
+12. Will see that the RUN command says it is running in a container ID. This is an intermediate container you can see being removed below. This is then stopped and a file system snapshot is save as a temporary image. This is an image with JUST the changes for that step.
+13. Same things actually happens with the CMD command. It creates an intermediate container and tells it the primary command then takes a snapshot with the contents of its file system and primary command.
+14. In the end we get a snapshot of the file system and the start up command output in its own image.
+15. Important point is that we take the image created in the previous step, run a command, then save the image again for the next step in the command. 
+16. Docker uses the system above in order to cache steps. If we add a new step and the ones before it don't change, it will grab the cached image for the previous steps in order to not re-run all the steps.
+17. If the order of operations changes, then we would need to go to the first step that remains the same and grab that cached image.
+18. If you need to update your dockerfile a lot, keep in mind the order of operations so that we can take advantage of caching.
+19. You can tag an image with a name using the following convention <dockerid>/<imagename>:<version>.
+20. Set your working dir with the WORKDIR command.
+21. Copy files into the container's WORKDIR using the COPY command.
+22. Expose a port using the EXPOSE command. By default no port is exposed from the container for incoming requests. We need to map the exposed container port to a port on a machine at runtime.
+23. By default all outgoing traffic is exposed by the container.
+24. Be careful about COPY functions in order to not bust the cache. If files will update frequently, use a separate COPY step for them so the rest of the files can remained cached.
+25. In general, copy over your package.json and then run install before copying over application files. This way node modules cached aren't busted.
+
