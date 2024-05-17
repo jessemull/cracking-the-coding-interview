@@ -1,0 +1,16 @@
+{
+  "name": "maps",
+  "version": "1.0.0",
+  "description": "A little bit more complex typescript app with classes creating some basic maps.",
+  "main": "index.js",
+  "scripts": {},
+  "author": "jessemull@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/googlemaps": "^3.43.3",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^8.4.1"
+  }
+}

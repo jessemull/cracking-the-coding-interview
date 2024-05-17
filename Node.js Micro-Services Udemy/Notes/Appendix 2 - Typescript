@@ -1,0 +1,132 @@
+What is Typescript?
+1. Javascript + a type system.
+2. Helps us catch errors in the code before run time.
+3. Uses type annotations to analyze code.
+4. Does not improve or impact performance in any way.
+   (a) In other languages, the type system does improve performance.
+5. Typescript will compile to Javascript that we can run.
+6. Write code in Typescript -> Compile with Typescript compiler -> Run good old plain Javascript.
+
+What is Typescript compiler?
+1. The Typescript package from npm provides the tsc command to compile Typescript.
+2. The ts-node package from npm allows you to run Typescript code without running tsc.
+
+What is a type?
+1. An easy way to refer to the different properties and functions a value has.
+2. Value of 'red'.
+   (a) A string -> simple explanation.
+   (b) A value containing all the methods and properties a string has e.g. concat, indexOf etc.
+   (c) The first is a shortcut to refer to all the properties and functions contained in the value.
+
+What are the primitive types?
+1. number
+2. boolean
+3. string
+4. Symbol
+5. void
+6. null
+7. undefined
+
+What are the object types?
+1. functions
+2. arrays
+3. objects
+4. classes
+
+Why is there a distinction between primitive and object types?
+1. We can write code to trick the Typescript compiler into interpreting one type as another.
+2. The above ONLY work with object types and not primitive types.
+
+Why do we care about types at all?
+1. Types are used by the Typescript compiler to analyze our code for errors before run time.
+2. Types allow other engineers to understand what the code is doing.
+
+What is a type annotation and what is type inference?
+1. Type annotation - code we use to tell Typescript what type a value has.
+   (a) Use a colon to annotate the type.
+2. Type inference - Typescript uses context to assign a type to a value.
+   (a) If we do everything on one line, type inference works every time.
+   (b) If we do declare a variable without assigning it, it has a type of any.
+3. These two are at odds with each other.
+
+If type inference works, why use annotation at all?
+1. Sometimes we need to declare a variable before it is assigned.
+
+What is the any type?
+1. If Typescript can't understand which type something is e.g. parsed JSON it is assigned any type.
+2. Don't assign any type if a type is unknown. Assign unknown instead but in general assign neither.
+
+Anything can be annotated!
+1. Arrays.
+2. Nested objects.
+3. Functions.
+4. Primitive types.
+5. Classes.
+6. Destructured objects.
+
+What is the never type?
+1. If the end of a function cannot be reached, it returns never e.g. thrown error.
+
+How are classes typed?
+1. Classes can be used directly as types in Typescript using the class name.
+
+How are arrays typed?
+1. Use brackets after the type that will be inside the array.
+2. Empty arrays must be annotated or they will be any arrays.
+3. Can use double brackets to annotate multi-dimensional arrays.
+4. If you pop off a value from the typed array, type inference will indicate that the popped value is that of the array type.
+5. If we try to push the wrong type onto the array, Typescript will throw an error.
+6. When iterating over a collection of elements, inference tells us the arg types and allows for auto-complete.
+7. We can used mixed array values by using the pipe operator and parens.
+
+How is the pipe operator used?
+1. Used like a logical OR for types e.g. string | boolean.
+
+What is a tuple?
+1. Like an array but structure tells us the type of each record in the array.
+2. An array with a fixed number of elements each with their own type.
+3. The order of the types/elements must be fixed.
+4. Tuples aren't super useful in Typescript:
+   (a) There is no way to know the intent of the types.
+   (b) Using an object, the key tells us the intent of the type.
+   (c) Usually better to just use objects in Typescript.
+
+What are interfaces?
+1. Interfaces are the way to get strong code re-use writing Typescript code.
+2. They are a declarative statement that assigns types to the properties of an object.
+3. We aren't limited to primitive types. We can add other interfaces, object types or functions.
+4. An object passed as an argument must satisfy the vehicle interface but it may have additional properties that are unused.
+5. Always make sure your interface makes sense and is named correctly for its contents.
+6. Interfaces constructed correctly can be recycled and used for multiple types of objects.
+7. To create re-usable code with Typescript:
+   (a) Create functions that accept arguments that are typed with interfaces.
+   (b) Objects/classes can decide to implement a given interface to work with a function.
+
+How are classes typed?
+1. Classes are a blueprint to create an object with fields and functions.
+2. Methods/fields can be marked as:
+   (a) public - can be called at any time
+   (b) private - can only be called inside of the current class
+   (c) protected - can be called inside of the class and child classes
+3. Private/public/protected don't actually add security. Remember that Typescript will be compiled to Javascript.
+4. Private/public/protected just makes it so during development other developers don't call the wrong methods.
+5. Remember that you can declare the private/public/protected field when passing to the argument of the constructor.
+6. Remember we are always required to call super in the constructor of a child class.
+7. Remember to use uppercase file names for classes and lower case for anything else by convention.
+
+When should we use classes?
+1. Using interfaces + classes allows us to get very strong Typescript resuse.
+
+Using parcel bundler...
+1. Accepts an html file as an argument.
+2. Builds javascript or typescript files by looking at the script tags and outputs to a dist directory.
+3. Really simple and easy way to build a functional application quickly.
+
+What are typescript definition files?
+1. Node modules we pull in may not have typescript information in them.
+2. To fix this problem, we have the concept of type definition files.
+3. This is an adapter between Typescript we write and modules we try to use.
+4. It defines the types of the module.
+5. These are often provided separately as a module to install alongside the javascript module or included in the module itself.
+6. If it is not provided, we need to create one ourselves.
+7. When creating packages for re-use, we should include this information in the build output.

@@ -1,0 +1,14 @@
+{
+  "name": "simple-typescript-app",
+  "version": "1.0.0",
+  "description": "A simple typescript example.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc index.ts"
+  },
+  "author": "jessemull@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.8"
+  }
+}
