@@ -18,7 +18,7 @@ app.post('/events', async (req, res) => {
       const match = data.content.match(/orange/gi)
       const status = match ? 'REJECTED' : 'APPROVED'
 
-      await axios.post('http://localhost:4005/events', { 
+      await axios.post('http://event-bus-srv:4005/events', { 
           type: 'COMMENT_MODERATED',
           data: {
             content: data.content,

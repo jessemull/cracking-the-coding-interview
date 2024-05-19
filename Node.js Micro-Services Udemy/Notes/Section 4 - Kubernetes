@@ -1,0 +1,102 @@
+How does Kubernetes work?
+1. We dockerize our services using docker to create a set of images.
+2. A kubernetes cluster consists of:
+   (a) Configuration.
+       i.  Tells us how many copies of each container to run.
+       ii. Sets up networking.
+   (b) Client (kubectl).
+       i.  Allows us to interact with our kubernetes cluster.
+       ii. Will check for images on your local machine and then in a repo just like docker.
+   (c) Pods.
+       i. Each pod contains a container or multiple containers.
+   (d) Deployment.
+       i. Reads the config file and manages the pods.
+       ii. If a container or pod crashes, the deployment ensures that the pod gets re-created.
+   (e) Services.
+       i. Manages all of the networking between pods/containers.
+   (f) Nodes.
+       i. A virtual machine that will run the containers.
+   (g) Master.
+       i. The master node that manages the other nodes.
+
+What is kubernetes?
+1. Cluster - a collection of nodes plus a master node to manage them.
+2. Node - a virtual machine that will run our containers.
+3. Pod - a running container or set of containers.
+4. Deployment - a monitor for a set of pods making sure they are running and restarting them if they fail.
+5. Service - manages networking and provides easy-to-remember URLs to access a running container.
+
+How do we configure kubernetes?
+1. Written in YAML syntax.
+2. Should always store these in our project source code as documentation.
+3. ALWAYS use a config file, only create objects without them for testing purposes!
+
+What are the important pod kubectl commands?
+1. kubectl get pods - lists the running pods.
+2. kubectl exec -it <podname> <command> - runs a command inside a container/pod. If there are multiple containers kubectl will prompt you for which container.
+3. kubectl logs <podname> - prints out container/pod logs.
+4. kubectl delete pod <podname> - deletes a pod.
+5. kubectl apply -f <configfile> - creates a pod.
+6. kubectl describe pod <podname> - describe the pod configuration.
+
+What does a pod spec consist of?
+1. apiVersion - tell kubernetes the pool of objects to pull from e.g. v1 will be the default objects.
+2. kind - the type of object to create e.g. pod.
+3. metadata - configuration options for the object to create.
+   (a) name - most common property used is name.
+4. spec - the exact attributes we want to apply to the container.
+   (a) containers - can create many containers in a pod or just one.
+       i.  name - the name of the container.
+       ii. image - the container image to use.
+
+How do deployments work?
+1. Monitors pods and ensures they are running.
+2. Restarts pods if they fail.
+3. Does a rolling deployment of new pod versions.
+4. Selector says which labels to use to find the correct pods.
+5. Template labels are given arbitrarily to the pods created by the deployment.
+6. Selector/template work together to define which pods to manage.
+7. Try deleting a pod created by a deployment manually, you can see it spin back up.
+
+What are the important deployment commands?
+1. kubectl get deployments - lists out all the running deployments.
+2. kubectl describe deployment <deploymentname> - descibes the deployment configuration.
+3. kubectl delete deployment <deploymentname> - deletes the deployment and all associated pods.
+4. kubectl apply -f <deploymentfile> - creates a deployment.
+5. kubectl rollout restart deployment <deploymentname> - restarts the deployment (pull in latest image).
+
+How can we update a deployment?
+1. Make a change to our deployment yaml file e.g. bump container version and then use kubectl apply -f <filename>.
+   i. This method is not used in practice because we have to do manual changes like bump the image version.
+2. Instead just use 'latest' version for our images and updates will happen automatically when the newer version is created.
+
+How do services work?
+1. Allow networking between pods and external networks.
+2. Four different types of services:
+   (a) Cluster IP - Sets up easy to remember URLs to access a pod.
+   (b) Node Port - Makes a pod accessible from outside the cluster but usually used for development purpose.
+   (c) Load Balancer - Makes a pod accessible from outside the cluster.
+   (d) External Name - Redirects an in cluster request to a CNAME.
+3. When you only have one pod using a node port for development is the best option (see above).
+4. What is the difference between port and target port?
+   (a) The pod running the container uses the target port.
+   (b) The node port service uses the port.
+   (c) The port and the target port do not have to be identical (probably an edge case where they are not identical).
+   (d) The node port is the port we use to access the service from outside the deployment.
+5. How do we set up a cluster IP?
+   (a) Pods get random IP addresses inside the node so we can't reach out directly.
+   (b) Instead we make a cluster IP service that will provide access between pods.
+
+What is a load balancer?
+1. Load balancer service tells kubernetes to reach out to its provider and provision a load balancer. It provides traffic to a single pod.
+2. Ingress / ingress controller is pod that configures a set of routing rules to distribute traffic to other services.
+3. The load balancer service / config file tells a cloud provider to create a load balancer and provision it for our cluster.
+4. In order to avoid using a cloud provider we can install ingress-nginx which will provide a load balancer and ingress. This is an open source package for kubernetes.
+5. We can also install helm which is a package manager for kubernetes.
+
+What is skaffold?
+1. Automates building and pushing images, updating kubernetes deployments etc.
+2. Takes a bunch of arguments to define what images to build and which source files to watch also where docker file lives and what it is named.
+3. Can disable local pushes to make things go faster.
+4. Keep in mind that in this project we are using nodemon and create-react-app dev server which listen to changes and automatically refresh.
+5. A lot of bugs exist with skaffold and other tools that sync files across containers. May not actually see your changes reflected and need to take some manual steps.
