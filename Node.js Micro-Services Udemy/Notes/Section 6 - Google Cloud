@@ -9,3 +9,10 @@ Why use Google Cloud?
 6. Using Google Cloud will speed up development speed even if we don't deploy via Google Cloud. 
    (a) Rebuilding images, restarting deployments etc will be done in seconds.
 7. We will use Google Cloud Build tool to rebuild our images / deployments.
+
+How does kubectl connect to different clusters?
+1. Uses context to connect to different clusters.
+2. Different contexts can connect to different clusters.
+3. We can add a new context to connect to Google Cloud.
+4. Can use a helper in the Google Cloud console to create the config file and copy and paste it to our local machine.
+5. A better way is to install the Google Cloud SDK and it will automatically manage the context.
