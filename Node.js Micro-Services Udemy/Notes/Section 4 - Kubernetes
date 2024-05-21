@@ -100,3 +100,4 @@ What is skaffold?
 3. Can disable local pushes to make things go faster.
 4. Keep in mind that in this project we are using nodemon and create-react-app dev server which listen to changes and automatically refresh.
 5. A lot of bugs exist with skaffold and other tools that sync files across containers. May not actually see your changes reflected and need to take some manual steps.
+6. Use skaffold dev inside directory with skaffold.yaml to re-build during development.

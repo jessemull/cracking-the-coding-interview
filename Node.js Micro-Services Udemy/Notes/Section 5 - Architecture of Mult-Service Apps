@@ -1,0 +1,73 @@
+What are the challenges with multi-service apps?
+1. The big challenge in micro-services management is data.
+2. We can choose to manage data synchronously or asynchronously. In general, manage data asynchronously.
+3. Async communication occurs by sending events to an event bus.
+4. Async communication allows each service to be 100% self-sufficient.
+5. Async communication can handle temporary down time or new service creation better.
+6. Docker makes it easy to package up services.
+7. Kubernetes allows us to easily scale and deploy our containerized applications.
+
+What are some of the pain points in multi-service apps and how do we solve them?
+1. Lots of duplicate code.
+   (a) Build a central module to share code between different projects.
+2. Hard to follow the flow of events between services.
+   (a) Precisely define events in our library.
+3. Hard to remember what properties an event should contain.
+   (a) Use typescript.
+4. Hard to test some event flows.
+   (a) Writes tests for as much as possible/reasonable.
+5. Recovering from errors in event flows can be difficult.
+   (a) Introduce a lot of code to handle concurrency issues.
+6. Running things locally can be pretty resource heavy.
+   (a) Run k8s cluster in the cloud and develop on it almost as quickly as locally.
+
+What are we building?
+1. A stubhub clone. Ticketing application.
+2. What if two people buy tickets at the same time? How do we handle collisions?
+3. How the app will work:
+   (a) Users can list a ticket for an event for sale.
+   (b) Other users can purchase a ticket.
+   (c) Any user can list tickets and purchase tickets.
+   (d) When a user attempts to purchase a ticket the ticket is locked for fifteen minutes.
+   (e) Ticket prices can be edited if they are not locked.
+
+What are the types of resources?
+1. Users.
+   (a) E-mail.
+   (b) Password.
+2. Ticket.
+   (a) Title.
+   (b) Price.
+   (c) User ID.
+   (d) Order ID.
+3. Orders.
+   (a) User ID.
+   (b) Status (cancelled, awaiting payment, complete).
+   (c) Ticket ID.
+   (d) Expiration time.
+4. Charge.
+   (a) Order ID.
+   (b) Status (created, failed, completed).
+   (c) Amount.
+   (d) Stripe ID.
+   (e) Stripe refund ID.
+
+What are the services?
+1. auth - everything related to sign in / sign-up / sign-out.
+2. tickets - ticket creation / editing. 
+   (a) Knows if a ticket can be updated.
+3. orders - order creation / editing. 
+   (a) Cancels order after fifteen minutes elapses.
+4. expiration - Watches for order creation and cancels orders after fifteen minutes.
+5. payments - handles credit card payments.
+   (a) Cancels orders if payment fails and completes order if payment succeeds.
+
+Note: we have a service for each resource but an actual application may not be the case in another application. General services are feature based.
+
+What is the overall architecture?
+1. Next.JS server side rendering for client.
+2. Node services above using MongoDB and Express.js.
+3. Expiration service will use Redis cache.
+4. Shared library for all services.
+5. NATS streaming server as our event bus (this is not the same NAT as network translation server).
+

@@ -1,0 +1,11 @@
+Why use Google Cloud?
+1. Skaffold / kubernetes were developed at Google!
+2. Add additional configuration for Skaffold to tell it to use Google Cloud.
+3. We can have Skaffold check synced and unsynced files.
+4. When we changed a synced file Skaffold reaches up to Google Cloud and tells the pod to refresh that file and rebuild.
+5. When we make a change to an unsynced file, it isn't automatically injected into a pod. Instead, we need to completely rebuild our auth image. 
+   (a) By default, anything not listed in the sync section is monitored as unsynced.
+   (b) Skaffold will tell Google Cloud to rebuild our image for us.
+6. Using Google Cloud will speed up development speed even if we don't deploy via Google Cloud. 
+   (a) Rebuilding images, restarting deployments etc will be done in seconds.
+7. We will use Google Cloud Build tool to rebuild our images / deployments.
