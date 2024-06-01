@@ -1,0 +1,107 @@
+How do we implement authentication?
+1. Option #1 - Auth service receives synchronous requests from other services.
+   (a) Request is made to a service.
+   (b) Service calls auth service synchronously with JWT or Cookie information.
+   (c) Service responds with whether the user is logged in or not.
+   (d) Limitation is that if the service fails, no services can use authentication.
+2. Option #1A - Put the auth service in front of all the other services acting like a gateway.
+   (a) Request is made to a service.
+   (b) Authentication service intercepts the request and determines if the user is logged in.
+   (c) If the user is logged in, pass the request to the appropriate downstream service.
+   (d) Limitation is the same, if the auth service fails, no requests can be made to any service.
+3. Option #2 - Each service can decide if the user is authenticated.
+   (a) Request is made to a service.
+   (b) Service inspects the JSON web token and determines itself if the user is authenticated.
+   (c) No dependency on external services.
+   (d) One downside is that the authentication logic is shared/repeated between services but code can be placed into shared library.
+
+What are some gaps in the second authentication strategy?
+1. What if a user is banned or we need to revoke a token but it is already issued?
+   (a) User can be removed or banned in auth service database but may still have a valid token.
+   (b) User can still call other services with the token because there is no direct connection between the auth service and other services.
+
+Summary
+1. Option #1 - Synchronous calls to auth service.
+   (a) Advantage - changes in state are immediately reflected.
+   (b) Disadvantage - if auth service goes down, no other service can be accessed.
+2. Option #2 - Individual services know how to authenticate a user.
+   (a) Advantage - each service can independently authenticate a user. If the auth service goes down, no immediate impact.
+   (b) Disadvantage - if a user needs to be banned or a token revoked there is no way to do so until it expires.
+
+Which option should we choose?
+1. Use option two in order to make services independent.
+2. Asynchronous services are meant to be independent.
+
+How do we fix the problem associated with option #2?
+1. We won't implement it because it is a huge amount of work.
+2. Only allow token be live for fifteen minutes.
+3. If the token is older than fifteen minutes, then need to refresh the token.
+   (a) Reach out to auth service to get a new refresh token and include it in overall request.
+   (b) If the person is banned, the auth service doesn't refresh the token.
+   (c) Other options is to reject the request and have the user refresh their token on their own by logging back in.
+4. What if the above isn't good enough?
+   (a) Use the event bus.
+   (b) Auth service for banned user sends out an event with the banned user.
+   (c) Then any listening services can listen for the event and maintain a list of banned users in a short-lived cache. 
+   (d) Cache can be short lived because once the token is expired the user won't be able to refresh the token.
+
+What is the difference between a JWT and a cookie?
+1. Cookies:
+   (a) Server responds with set cookie header key and a value to set.
+   (b) Whenever the browser makes a request to the same domain it is automatically sent to the server in the request header.
+   (c) Cookies are a transport mechanism they can communicate any information and they are used for many different purposed to move data between the browser and the server.
+   (d) Cookies are automatically handled by the browser.
+3. JWTs:
+   (a) Take some arbitrary data input e.g. username and then throw it into a JWT creation algorithm.
+   (b) Method exists to decode the token and inspect the information.
+   (c) Can then include the JWT in the request headers, request body or even a cookie.
+   (d) JWTs are about authentication and authorization.
+   (e) We can store any information inside of the token.
+   (f) We need to manage how the JWT is handled between browser and client.
+
+Which one will we use and what are the requirements?
+1. Need to store information about whether a user is able to purchase a ticket.
+2. May need to store information about other things like if the user is an admin and can access a coupon service e.g. role.
+3. Must make sure the token expires after a set period of time.
+4. Must makes sure it is language agnostic.
+5. We don't want any backing data store we need to check.
+6. JWTs can meet all of the above requirements.
+
+How does authentication work with server side rendered React application?
+1. Client makes are request for the ticketing.dev page.
+2. The server returns the page headers and a series of script tags to load the pages.
+3. When the user navigates to each page, a script requests the page content in a new request.
+4. Depending on the page, the client may then request data from a service e.g. orders.
+5. Three types of requests:
+   (a) Initial request for the html page.
+   (b) A follow up request for additional content or pages.
+   (c) A request to a micro-service.
+6. In a normal setting we don't really care about authenticating the requests that fetch pages and content.
+7. We are concerned about authentication when the client makes a request to a micro-service.
+   (a) Include the JWT in the header, body or cookie for these requests.
+8. However, in a server side rendered application, the entire page and all the content is returned at once.
+   (a) The server side application will need to make downstream requests to all the micro-services.
+   (b) We need to authenticate during the initial page load and not just when we call micro-services.
+   (c) We HAVE to include the authentication token in a cookie because it is the only way to communicate the information on the initial page load.
+
+How will this work?
+1. User signs up.
+2. Hash the password and store it in the MongoDB database.
+3. Create a JWT for the session after sign-up (they are logged in now).
+4. Then return the JWT inside the cookie.
+
+Should we encrypt our cookie?
+1. If we encrypt a cookie, it may make it hard to use the cookie across languages.
+2. The JWT already encrypts the information, so we shouldn't need to encrypt the cookie contents.
+3. If we want to, we can encrypt the cookie information to be extra safe.
+
+How do we create secrets in k8?
+1. We can create a secret key-value pair using an imperative command or load secrets from a config file into our yaml files.
+2. kubectl create secret generic jwt-secret --from-literal=key1=value1,key2=value2.
+3. Using the imperative approach, the secret can then be referenced in our yaml files and accessed via an environment variable in our pods.
+
+
+
+
+
+

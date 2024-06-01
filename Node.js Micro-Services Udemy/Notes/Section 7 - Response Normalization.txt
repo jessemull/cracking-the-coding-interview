@@ -1,0 +1,17 @@
+Why do we need response normalization?
+1. Client should know the expected structure of things like errors.
+
+How do we normalize validation?
+1. We have different errors in different places that can occur during a single call.
+2. We need one identical structure that works for anything that goes wrong inside the application.
+3. E.g. error could occur because of short password, username already taken or a fail to write to the database.
+4. Synchronous route handlers in express handle errors automatically.
+5. In asynchronous route handlers we need to capture the error and pass it using next to the next middleware.
+6. Writing error handling middleware for express:
+   (a) Middleware automatically checks the number of arguments.
+   (b) Use err, req, res, next arguments for error handling middleware.
+   (c) Error handling middleware will capture all errors and then return a normalized error response.
+   (d) Extend the error class in Javascript and add custom properties.
+   (e) To do this create an abstract class with a way to serialize the error into a standard format and a status code.
+   (f) Then when the middleware sees the error, just grab the status code and call serialized to send the response.
+7. Add express-async-errors to make sure async functions handle errors without returning a promise.
