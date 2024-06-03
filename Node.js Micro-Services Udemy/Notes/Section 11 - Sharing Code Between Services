@@ -1,0 +1,24 @@
+What are the strategies for sharing code between services?
+1. We can just copy/paste.
+   (a) Prone to errors.
+   (b) Need to update all copied/pasted code one by one each time we need to make an update.
+2. We can create a git sub-module.
+   (a) A sub-module is a git repository inside another git repository.
+   (b) Common code is inside version control.
+   (c) Solid documentation about changes made.
+   (d) Difficult to configure.
+3. Publish code as npm packages.
+   (a) Just install as an npm dependency.
+   (b) Versioned in common library.
+   (c) Solid documentation about changes made.
+
+How do NPM registries work?
+1. We can publish to a public registry.
+   (a) Anyone can view the code.
+2. We can publish it to an organization.
+   (a) Can mark this organization as private.
+   (b) Only members of the organization can view the code.
+3. We can publish it to a private registry.
+   (a) Only people who have access to the registry can view the code.
+4. Private organizations and registries require paying NPM.
+

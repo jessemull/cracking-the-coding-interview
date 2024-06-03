@@ -1,0 +1,23 @@
+How can we fetch data from a different namespace during getInitial props?
+1. In NextJS getInitialProps is called on the server side before the page is returned to the browser.
+2. In the browser if we leave off the domain name it will default to the current one e.g. ticketing.dev.
+3. When we are inside a kubernetes cluster, this means that we cannot just call a service using the service name because it will use the wrong domain.
+4. Instead, we can call our ingress nginx service directly but this service is inside another namespace.
+5. We have to look up the service in the other namespace:
+   (a) kubectl get namespaces - find the ingress-nginx namespace.
+   (b) kubectl get services -n <namespace> - get the services in the specified namespace.
+   (c) http://ingress-nginx.ingress-nginx.svc.cluster.local/api/users/currentuser
+6. We need to tack on svc.cluster.local as well.
+7. To not have to do all of the above we can use an external name service to map the complicated domain above to a simpler one in kubernetes.
+8. Remember that...
+   (a) Components will use requests from the browser.
+   (b) getInitialProps will use requests from the server OR the browser we need to be aware of the environment.
+9. We also need to specify the host name in the headers option for our request because ingress nginx doesn't know to use ticketing.dev.
+10. We then need to add a cookie and add that to the headers as well because we are on the server so it is not automatic.
+    (a) Easiest way to do this is to pick off the 'req' param passed to getInitialProps and then just pass ALL the headers from the request using req.headers to the API call.
+
+How does getInitialProps differ for the _app component?
+1. The arguments are different, here we receive a Component arg and also ctx argument for context.
+2. We need to check if the component being passed has a property of getInitialProps and invoke it directly inside the _app getInitialProps.
+3. We need to then return these pageProps from the _app getInitialProps and pass them to the Component being rendered or getInitialProps for each page is never invoked.
+4. We can then return any other data we need at an application wide level from the _app getInitialProps alongside the pageProps.

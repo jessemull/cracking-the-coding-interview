@@ -1,0 +1,29 @@
+What is testing scope?
+1. Testing single piece of code in isolation e.g. one middleware.
+2. Testing two or more pieces of code together e.g. a route that uses middleware.
+3. Testing two or more components together e.g. call a route and make sure it writes to the database or works with the event bus.
+4. Testing two or more services together e.g. how do two services interact with each other, one emits an event and the other receives it.
+
+Why do we need different scopes?
+1. The reality is that writing end to end tests is incredibly difficult.
+   (a) We'd need to deploy two pods and their services together and then call the services.
+2. Instead, easier to focus on testing how single pieces of code work in isolation or two pieces work together.
+3. End to end testing is still critical but outside the scope of this course and difficult to get right.
+
+What should our testing goals/scope be?
+1. Basic request handling.
+2. Model functionality.
+3. Emitting and receiving events.
+
+What is the testing strategy?
+1. Run jest as a test runner.
+2. Run supertest to mock calls to our server.
+3. Use an in-memory MongoDB instance.
+
+How does our code need to be structured to use supertest?
+1. We need access to the top-level express application in our index.ts file.
+2. Supertest receives the express application as its first argument.
+3. We don't want to execute the start-up logic when exporting our app.
+4. If we listen on port 3000 we may have different instances of our app in different tests running on port 3000.
+5. We may have different services on the same machine also listening on this port.
+6. Split out index.ts into app.js which creates the app and exports it but doesn't start the server and index.ts which starts the app.

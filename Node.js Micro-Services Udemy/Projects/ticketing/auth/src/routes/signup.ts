@@ -3,8 +3,7 @@ import jwt from 'jsonwebtoken'
 import { Router } from 'express'
 import { body } from 'express-validator'
 import { User } from '../models/user'
-import { BadRequestError } from '../errors/bad-request-error'
-import { validateRequest } from '../middlewares/validate-request'
+import { BadRequestError, validateRequest } from '@mytix/common'
 
 const router = Router()
 
