@@ -1,0 +1,112 @@
+What is the NATS streaming service and how does it differ from NATS?
+1. NATS streaming service is built on top of NATS which is a tool for managing events.
+2. NATS streaming service is now deprecated but is still used in this project due to its simplicity.
+3. A real project would use Kafka or RabbitMQ.
+4. There is a node based client library that uses node event emitters to send and receive events from NATS streaming server.
+5. NATS streaming server is built around the concept of channels.
+   (a) A service subscribes to a channel to receive its events.
+   (b) Events are emitted to a specific channel.
+6. The custom event bus will contain a memory store (both in memory and in a database) to contain all of the events emitted in a data store.
+   (a) This makes it so we can handle temporary down time.
+   (b) A service coming back online or a new service can request all of the events ever emitted.
+
+How can we access our NATS pod locally?
+1. You can use a k8 command to port forward the exposed port in the cluster to localhost.
+2. kubectl port-forward <podname> <localport>:<podport>
+
+What is a queue group?
+1. A queue group is created inside of a channel.
+2. A single channel can have multiple queue groups.
+3. Queue groups are used to prevent issues in concurrency.
+   (a) Two instances cannot receive the same event.
+   (b) NATS streaming server picks a single instance in the queue group and emits the event to that single instance.
+4. If a listener is not inside the queue group, it also receive the event from NATS streaming service.
+
+What options are important for NATS streaming service?
+1. When an error occurs, the default behavior is that the event is just lost to our listener.
+2. We can set the ack mode to manual so that the listener needs to acknowledge that the message was received.
+3. After the event is received and the data is processed, the listener can acknowledge that the message was received.
+4. If the NATS server doesn't receive an ack it waits some period of time and then pushes it to another listener in the queue group.
+
+How do we ensure using NATS we re-process events that were dropped?
+1. Can set an option to process all available events ever delivered on subscribe.
+   (a) This obviously won't work after the service has been running a long while as there will be too many events to process.
+   (b) We would need to re-process ALL events even if one is dropped.
+2. Can create a durable subscription.
+   (a) Adds a name for the subscription.
+   (b) Uses the name to determine if the service has processed all of the events.
+   (c) Once processed, event will be marked as processed by NATS.
+3. We need both options, the first for start-up to make sure everything is processed, the second for if a message is dropped.
+
+
+
+What happens when a listener goes offline?
+1. When a client goes offline, NATS thinks that the client may come back up and holds onto messages it is sending.
+2. If the client doesn't come back online, the message may actually be lost until it does.
+3. There is a heart break request interval set by the -hbi option.
+4. There is a heart break request failed number set by the -hbf option.
+5. We can add some code detecting when a client goes down, and tell the NATS server a shut down request.
+
+What issues can cause problems due to concurrency?
+1. What if a listener fails to process the event?
+   (a) If we don't acknowledge the event, it will be sent again.
+   (b) There is a time interval that must elapse before being sent again.
+   (c) During that time more events might be processed.
+   (d) Processing the events out of order, we may cause catostrohpic issues e.g. people over-drawing a checking account.
+2. One listener might process events more quickly than another.
+3. NATS might think a client is still alive even when it is dead.
+4. We might receive the same event twice in a row.
+5. All of the above can and will happen inside an application and must be handled.
+
+What solutions won't work to fix concurrency issues?
+1. Run one copy of the service.
+   (a) This is obviously not a good solution as the instance would quickly get overwhelmed.
+   (b) Generates huge bottleneck.
+2. Figure out every case individually and handle each issue.
+   (a) Basically impossible because it is such a giant amount of effort.
+   (b) Huge amount of money in developer time due to the above.
+   (c) A lot of the time if events are processed out of order it doesn't matter that much e.g. tweets being out of order.
+3. Have a shared state that stores the sequence number.
+   (a) When a service processes an event it puts the sequence number into the shared store.
+   (b) The next service checks the shared state to see if the previous transaction was processed.
+   (c) Events are processed in order.
+   (d) Performance is incredibly degraded because each message/event needs processed in the right order.
+   (e) Leads to increased overhead to get restarted sequence numbers if messages/events are dropped.
+4. Store all events with sequences numbers and last sequence processed in a publisher.
+   (a) When service looks to process an event, it looks for the last event processed in publisher.
+   (b) When the service updates the database, it also stores the last processed ID.
+   (c) It now checks the last processed in publisher and compares it to the database ID and makes the transactions go in order.
+   (d) Essentially service refuses to process the event until they are in sequence.
+   (e) Can't really get the last processed sequence number from the NATS streaming service but pretty close to actual solution.
+
+What are actual solutions to fix concurrency issues?
+1. We need to revisit the service design instead of relying on NATS streaming server to solve the problem for us.
+2. Steps for solution:
+   (a) Make a network request to update/create/delete a resource.
+   (b) The service own the complete transaction and stores the data in its own data store.
+   (c) An event is emitted to the event bus.
+   (d) A single database aggregates the data based on the event notification.
+3. In the case of a banking application, we may have a single service that handles all transactions.
+   (a) It emits deposit and withdrawal events with a sequence number and the transaction information.
+   (b) The accounts service listens to all of the transaction events.
+   (c) It stores the last transaction number when it processes a transaction event.
+   (d) If the events flow through in order, there are no issues and the events are processed in order.
+   (e) If the events flow out of order e.g. due to a service crashing, the event sequence number is compared to the last transaction number processed in the service database.
+   (f) If the last transaction number processed is equal to the event sequence number minus one, we process the transaction.
+   (g) If the last transaction number processed is not equal to the event sequence number minus one, we ignore the event.
+   (h) Now, the event bus waits some time interval and then emits the event again. It is now processed in order.
+   (i) An important point is that the accounts database is per user (or per any resource) so that the events related to any given resource can be processed in parallel.
+4. In this way, the versioning and sequencing is done by the service that owns the data and that service alone.
+
+How would this solution work with the tickets service?
+1. The orders service will need to be aware of the tickets service. In particular, it will need to know when a price changes.
+2. A network request is made to the tickets service to create a new ticket.
+3. The ticket gets an ID, a price and a version number for sequencing.
+4. An event is emitted with the event type, ID, price and version number.
+5. The event bus receives the event and emits it to the orders service which is listening on the correct channel.
+6. When the ticket is created, it is stored into the orders service with the initial version number.
+7. When the ticket is updated, we check the version number against the version number stored in the orders database.
+8. If the version number minus one is equal to the version number stored in the database, the event is processed.
+9. If the version number minuse one is not equal to the version number stored in the database, the event is not processed.
+10. If the event is not processed, the orders service waits for the event bus to re-send the message and tries to process it again.
+   
