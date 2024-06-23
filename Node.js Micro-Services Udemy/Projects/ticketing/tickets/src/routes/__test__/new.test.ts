@@ -1,6 +1,7 @@
 import request from 'supertest'
 import app from '../../app'
 import { Ticket } from '../../models/ticket'
+import { wrapper } from '../../nats-client'
 
 describe('new router', () => {
   it('has a route handler listening to /api/tickets for post requests', async () => {
@@ -45,5 +46,14 @@ describe('new router', () => {
     expect(tickets.length).toEqual(1)
     expect(tickets[0].title).toEqual('title')
     expect(tickets[0].price).toEqual(100.00)
+  })
+
+  it('publishes an event on ticket creation', async () => {
+    let tickets = await Ticket.find({})
+    expect(tickets.length).toEqual(0)
+
+    const response = await request(app).post('/api/tickets').set('Cookie', signin()).send({ price: 100.00, title: 'title' })
+    expect(response.status).toEqual(201)
+    expect(wrapper.client.publish).toHaveBeenCalled()
   })
 })

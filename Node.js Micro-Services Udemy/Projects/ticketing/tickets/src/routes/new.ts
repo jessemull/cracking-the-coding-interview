@@ -1,7 +1,9 @@
 import { BadRequestError, requireAuth, validateRequest } from '@mytix/common'
-import { Router, Request, Response } from 'express'
+import { Router } from 'express'
 import { body } from 'express-validator'
 import { Ticket } from '../models/ticket'
+import { TicketCreatedPublisher } from '../events/publishers/ticket-created-publisher'
+import { wrapper } from '../nats-client'
 
 const router = Router()
 
@@ -20,7 +22,7 @@ const validationRules = [
     .withMessage('Price is required.')
 ]
 
-router.post('/api/tickets', requireAuth, validationRules, validateRequest, async (req: Request, res: Response) => {
+router.post('/api/tickets', requireAuth, validationRules, validateRequest, async (req, res) => {
   const { price, title } = req.body
   const { id } = req.currentUser
 
@@ -32,6 +34,13 @@ router.post('/api/tickets', requireAuth, validationRules, validateRequest, async
 
   const ticket = Ticket.build({ price, title, userId: id })
   await ticket.save()
+
+  await new TicketCreatedPublisher(wrapper.client).publish({
+    id: ticket.id,
+    price: ticket.price,
+    title: ticket.title,
+    userId: ticket.userId
+  })
 
   res.status(201).send(ticket)
 })

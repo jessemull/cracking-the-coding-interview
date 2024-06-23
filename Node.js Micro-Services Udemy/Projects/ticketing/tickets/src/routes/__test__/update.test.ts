@@ -1,6 +1,7 @@
 import request from 'supertest'
 import app from '../../app'
 import mongoose from 'mongoose'
+import { wrapper } from '../../nats-client'
 
 const createTicket = (price, title) =>  request(app).post('/api/tickets').set('Cookie', signin()).send({ price, title })
 
@@ -102,5 +103,23 @@ describe('update router', () => {
     expect(response.status).toEqual(200)
     expect(response.body.price).toEqual(200.00)
     expect(response.body.title).toEqual('updated-title')
+  })
+  it('publishes an event on ticket update', async () => {
+    const cookie = signin()
+    const { body: { id } } = await request(app)
+      .post('/api/tickets')
+      .set('Cookie', cookie)
+      .send({
+        price: 100.00,
+        title: 'title'
+      })
+    const response = await request(app)
+      .put(`/api/tickets/${id}`)
+      .set('Cookie', cookie)
+      .send({
+        price: 200.00,
+        title: 'updated-title'
+      })
+    expect(wrapper.client.publish).toHaveBeenCalled()
   })
 })

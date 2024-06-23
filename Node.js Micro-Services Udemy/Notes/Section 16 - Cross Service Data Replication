@@ -1,0 +1,6 @@
+What are the strategies for associating two records in MongoDB?
+1. Embedding is when one record is just saved inside of the other record e.g. an order record has a ticket object inside of it.
+   (a) If we want to query on the embedded records this complicates things and reduces performance e.g. we need to know if a ticket is in use.
+   (b) If there are records that need to live outside of the first record e.g. a ticket that isn't associated with an order, this doesn't work. Every embedded record would need to be associated with a record.
+2. Ref/Population is when a key in one record is used to reference the second record.
+   (a) The records are stored in different collections.

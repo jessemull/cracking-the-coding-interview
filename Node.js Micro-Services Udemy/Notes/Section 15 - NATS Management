@@ -1,0 +1,9 @@
+What happens if we save a record to our database but we don't publish an event?
+1. This puts our system out of sync.
+2. To ensure this doesn't happen, we should save the event into our database and mark it as unpublished.
+3. Once publishing is successful we mark the record as published.
+4. If we save the event but not the record, we need to roll back the event.
+5. If we save the record but not the event, we need to roll back the record.
+6. We should use a database transaction that stores both the event and the record at the same time and rolls back both if one doesn't save.
+   (a) Most databases just support this transaction functionality out-of-the-box.
+7. This course will not cover implementing this rollback or saving the event and marking it as published.
