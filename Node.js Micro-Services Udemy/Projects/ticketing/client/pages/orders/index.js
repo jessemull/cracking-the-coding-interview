@@ -1,24 +1,25 @@
 import Link from 'next/link'
+import React from 'react'
 
-const LandingPage = ({ tickets }) => {
+const ShowOrders = ({ orders }) => {
   return (
     <div className="m-3">
-      <h1>Tickets</h1>
+      <h1>Orders</h1>
       <table className="table">
         <thead>
           <tr>
             <th>Title</th>
-            <th>Price</th>
+            <th>Status</th>
             <th>Link</th>
           </tr>
         </thead>
         <tbody>
-          {tickets.map(({ id, price, title }) => (
+          {orders.map(({ id, status, ticket: { title } }) => (
             <tr key={id}>
               <td>{title}</td>
-              <td>{price}</td>
+              <td>{status}</td>
               <td>
-                <Link href="/tickets/[ticketId]" as={`/tickets/${id}`}>
+                <Link href="/orders/[orderId]" as={`/orders/${id}`}>
                   View
                 </Link>
               </td>
@@ -30,13 +31,13 @@ const LandingPage = ({ tickets }) => {
   )
 }
 
-LandingPage.getInitialProps = async (context, client, currentUser) => {
-  const { data } = await client.get('/api/tickets')
+ShowOrders.getInitialProps = async (context, client, currentUser) => {
+  const { data } = await client.get(`/api/orders`)
   return {
     client,
     currentUser,
-    tickets: data
+    orders: data
   }
 }
 
-export default LandingPage
+export default ShowOrders

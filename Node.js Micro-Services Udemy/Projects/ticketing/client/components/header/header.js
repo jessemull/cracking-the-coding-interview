@@ -32,6 +32,8 @@ const Header = ({ currentUser }) => {
         </h1>
         {currentUser ? 
           <div>
+            <Link className="btn btn-outline-light me-2" href="/tickets/new">Sell Tickets</Link>
+            <Link className="btn btn-outline-light me-2" href="/orders">My Orders</Link>
             <button className="btn btn-outline-light me-2" id="sign-out-btn" onClick={onSignOut}>Sign Out</button>
           </div> : 
           <div>

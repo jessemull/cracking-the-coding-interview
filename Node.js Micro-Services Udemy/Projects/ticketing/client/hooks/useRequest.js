@@ -12,13 +12,13 @@ const Errors = ({ errors = [] }) => {
 const useRequest = ({ body, method, onSuccess, url }) => {
   const [errors, setErrors] = useState(null)
 
-  const doRequest = async () => {
+  const doRequest = async (data = {}) => {
     setErrors(null)
     try {
-      const response = await axios[method](url, body)
+      const response = await axios[method](url, { ...body, ...data })
       onSuccess(response.data)
     } catch (err) {
-      setErrors(<Errors errors={err.response.data} />)
+      setErrors(<Errors errors={err && err.response ? err.response.data : [{ message: 'Something went wrong.' }]} />)
     }
   }
 
