@@ -1,0 +1,6 @@
+How can we use versioning to fix concurrency issues?
+1. We don't want to process updates out of order.
+2. We can add a version to each record that we emit as an event to avoid concurrency issues.
+3. Mongoose/MongoDB (and other databases) provide this functionality.
+4. When an event is processed, we check the version on the event and do not acknowledge or process the event if the last version in our database is not the current version minus one.
+5. The event/message is sent out again after some delay we can configure in our event bus and the hope is that by that time we've processed the next record in the correct order.

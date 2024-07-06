@@ -1,6 +1,8 @@
 import app from './app'
 import mongoose from 'mongoose'
 import { wrapper } from './nats-client'
+import { OrderCancelledListener } from './events/listeners/order-cancelled-listener'
+import { OrderCreatedListener } from './events/listeners/order-created-listener'
 
 const start = async () => {
   if (!process.env.JWT_SECRET_KEY) {
@@ -26,6 +28,8 @@ const start = async () => {
   try {
     await wrapper.connect(process.env.NATS_CLUSTER_ID, process.env.NATS_CLIENT_ID, process.env.NATS_URL)
     await mongoose.connect(process.env.MONGO_URI)
+    await new OrderCreatedListener(wrapper.client).listen()
+    await new OrderCancelledListener(wrapper.client).listen()
     wrapper.client.on('close', () => {
       console.log('NATS connection closed!')
       process.exit()

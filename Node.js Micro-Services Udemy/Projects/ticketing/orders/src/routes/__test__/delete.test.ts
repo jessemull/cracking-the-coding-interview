@@ -1,4 +1,5 @@
 import app from '../../app'
+import mongoose from 'mongoose'
 import request from 'supertest'
 import { Ticket } from '../../models/ticket'
 import { OrderStatus } from '@mytix/common'
@@ -6,8 +7,9 @@ import { wrapper } from '../../nats-client'
 
 const buildTicket = async () => {
   const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     price: 100.00,
-    title: 'title',
+    title: 'title'
   })
   await ticket.save()
   return ticket

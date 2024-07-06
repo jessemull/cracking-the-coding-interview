@@ -1,0 +1,22 @@
+How can we keep track of expiration dates? 
+1. We need to wait for 15 minutes and then have a ticket expire.
+2. How can we emit an event exactly after 15 minutes?
+3. We can use setTimeout.
+   (a) Timer is stored in memory.
+   (b) If service restarts, all timers are lost.
+4. Just don't ack order created message until we reach the expiration time.
+   (a) Relies on event bus redelivery mechanism.
+   (b) Breaks because we might want to track how many times an event/message is re-delivered and stop delivery to prevent a loop.
+5. Use a message broker that holds onto the event/message until the expiration time expires.
+   (a) NATS doesn't support this although other event bus implementations do support it.
+6. Use redis and bull to keep track of things in a queue.
+
+How does bull work?
+1. Request comes in e.g. convert an mp4 file to MKV format.
+2. Rather than doing this on an immediate web server, we have a worker server or container to process these requests (jobs).
+3. There may be multiple copies of this worker server.
+4. Redis sits in-between the redis server and the worker servers and stores the list of jobs.
+5. The worker servers listen to redis and pull jobs off to process them.
+6. Once the job is complete, the worker server then updates redis saying the job is complete.
+7. Bull basically creates a job queue that the worker service can then use to pull off jobs and process them.
+8. In our implementation, we don't have worker servers, we just store the list of jobs and once they expire we get notified.

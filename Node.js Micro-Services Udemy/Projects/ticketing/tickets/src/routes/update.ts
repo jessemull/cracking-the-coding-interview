@@ -1,4 +1,4 @@
-import { NotAuthorizedError, NotFoundError, requireAuth, validateRequest } from '@mytix/common'
+import { BadRequestError, NotAuthorizedError, NotFoundError, requireAuth, validateRequest } from '@mytix/common'
 import { Router } from 'express'
 import { body } from 'express-validator'
 import { Ticket } from '../models/ticket'
@@ -33,6 +33,10 @@ router.put('/api/tickets/:id', requireAuth, validationRules, validateRequest, as
     throw new NotFoundError()
   }
 
+  if (ticket.orderId) {
+    throw new BadRequestError('Ticket is already reserved!')
+  }
+  
   if (ticket.userId !== userId) {
     throw new NotAuthorizedError()
   }
@@ -48,7 +52,8 @@ router.put('/api/tickets/:id', requireAuth, validationRules, validateRequest, as
     id: ticket.id,
     price: ticket.price,
     title: ticket.title,
-    userId: ticket.userId
+    userId: ticket.userId,
+    version: ticket.version
   })
   
   res.status(200).send(ticket)

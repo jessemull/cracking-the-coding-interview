@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current'
 import { TicketDocument } from './ticket'
 import { OrderStatus } from '@mytix/common'
 
@@ -24,6 +25,7 @@ interface OrderDocument extends mongoose.Document {
   status: OrderStatus
   ticket: TicketDocument
   userId: string
+  version: number
 }
 
 const schema = new mongoose.Schema({
@@ -53,6 +55,9 @@ const schema = new mongoose.Schema({
     }
   }
 })
+
+schema.set('versionKey', 'version')
+schema.plugin(updateIfCurrentPlugin)
 
 schema.statics.build = (order: OrderAttributes) => {
   return new Order(order)

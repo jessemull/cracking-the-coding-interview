@@ -39,3 +39,19 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
+    - image: us.gcr.io/glass-arcanum-424002-c3/expiration
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: us.gcr.io/glass-arcanum-424002-c3/payments
+      context: payments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .

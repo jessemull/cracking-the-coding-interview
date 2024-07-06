@@ -2,10 +2,10 @@ import app from '../../app'
 import mongoose from 'mongoose'
 import request from 'supertest'
 import { Ticket } from '../../models/ticket'
-import { Order, OrderStatus } from '../../models/order'
 
 const buildTicket = async () => {
   const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     price: 100.00,
     title: 'title',
   })

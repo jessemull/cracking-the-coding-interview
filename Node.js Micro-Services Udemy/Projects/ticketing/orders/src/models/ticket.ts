@@ -1,9 +1,11 @@
 import mongoose from 'mongoose'
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current'
 import { Order, OrderStatus } from './order'
 
 // Interface describing required properties to create a new ticket.
 
 interface TicketAttributes {
+  id: string
   price: Number
   title: string
 }
@@ -11,15 +13,17 @@ interface TicketAttributes {
 // Interface that describes the properties on a ticket model.
 
 interface TicketModel extends mongoose.Model<any> {
-  build(ticket: TicketAttributes): TicketDocument
+  build(ticket: TicketAttributes): TicketDocument,
+  findByLastVersion(event: { id: string, version: number }): Promise<TicketDocument | null>,
 }
 
 // Interface that describe the properties on a ticket document.
 
 export interface TicketDocument extends mongoose.Document {
   isReserved: () => Promise<boolean>
-  price: Number
+  price: number
   title: string
+  version: number
 }
 
 const schema = new mongoose.Schema({
@@ -43,8 +47,15 @@ const schema = new mongoose.Schema({
 })
 
 schema.statics.build = (ticket: TicketAttributes) => {
-  return new Ticket(ticket)
+  return new Ticket({ ...ticket, _id: ticket.id })
 }
+
+schema.statics.findByLastVersion = (event: { id: string, version: number }) => {
+  return Ticket.findOne({ _id: event.id, version: event.version - 1 })
+}
+
+schema.set('versionKey', 'version')
+schema.plugin(updateIfCurrentPlugin)
 
 // Requires function keyword in order to bind this to the function.
 

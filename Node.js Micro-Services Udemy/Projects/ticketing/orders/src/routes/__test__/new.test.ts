@@ -18,6 +18,7 @@ describe('newOrderRouter', () => {
   })
   it('returns an error if the ticket is already reserved', async () => {
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       price: 100.00,
       title: 'title',
     })
@@ -40,6 +41,7 @@ describe('newOrderRouter', () => {
   })
   it('reserves a ticket and creates an order', async () => {
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       price: 100.00,
       title: 'title',
     })
@@ -54,6 +56,7 @@ describe('newOrderRouter', () => {
   })
   it('publishes an event when a ticket is reserverd', async () => {
     const ticket = Ticket.build({
+      id: new mongoose.Types.ObjectId().toHexString(),
       price: 100.00,
       title: 'title',
     })

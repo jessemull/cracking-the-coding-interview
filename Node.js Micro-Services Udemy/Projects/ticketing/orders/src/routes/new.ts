@@ -34,7 +34,7 @@ router.post('/api/orders', requireAuth, validators, validateRequest, async (req:
   }
 
   const expiresAt = new Date()
-  expiresAt.setMinutes(expiresAt.getMinutes() + 15)
+  expiresAt.setMinutes(expiresAt.getMinutes() + 1)
 
   const order = Order.build({ 
     expiresAt,
@@ -51,9 +51,10 @@ router.post('/api/orders', requireAuth, validators, validateRequest, async (req:
     status: order.status,
     ticket: {
       id: order.ticket.id,
-      price: Number(order.ticket.price)
+      price: order.ticket.price
     },
-    userId: order.userId
+    userId: order.userId,
+    version: order.version
   })
 
   return res.status(201).send(order)

@@ -2,6 +2,7 @@ import request from 'supertest'
 import app from '../../app'
 import mongoose from 'mongoose'
 import { wrapper } from '../../nats-client'
+import { Ticket } from '../../models/ticket'
 
 const createTicket = (price, title) =>  request(app).post('/api/tickets').set('Cookie', signin()).send({ price, title })
 
@@ -113,7 +114,7 @@ describe('update router', () => {
         price: 100.00,
         title: 'title'
       })
-    const response = await request(app)
+    await request(app)
       .put(`/api/tickets/${id}`)
       .set('Cookie', cookie)
       .send({
@@ -121,5 +122,28 @@ describe('update router', () => {
         title: 'updated-title'
       })
     expect(wrapper.client.publish).toHaveBeenCalled()
+  })
+  it('cannot update ticket if it is already reserved', async () => {
+    const cookie = signin()
+    const { body: { id } } = await request(app)
+      .post('/api/tickets')
+      .set('Cookie', cookie)
+      .send({
+        price: 100.00,
+        title: 'title'
+      })
+    const ticket = await Ticket.findById(id)
+    ticket.set({
+      orderId: 'orderId'
+    })
+    await ticket.save()
+    const response = await request(app)
+      .put(`/api/tickets/${id}`)
+      .set('Cookie', cookie)
+      .send({
+        price: 200.00,
+        title: 'updated-title'
+      })
+    expect(response.status).toEqual(400)
   })
 })
