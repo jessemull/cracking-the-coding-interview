@@ -20,7 +20,7 @@ What is the difference between synchronous and asynchronous callbacks?
 Why are functions that exhibit both synchronous and asynchronous behavior so dangerous?
 1. Lead to incredibly inconsistent and unpredictable behavior.
 2. 'Unleashing Zalgo!'
-3. Can convert an mixed function to a synchronous one by using synchronous APIs.
+3. Can convert a mixed function to a synchronous one by using synchronous APIs.
    (a) May slow down the application due to blocking operations.
    (b) An API for a synchronous operation may not be available.
    (c) Counter intuitively we need to update the surrounding code to handle the synchronous behavior.
@@ -89,4 +89,16 @@ When should a callback be used and when should an event emitter be used?
 2. Event emitters should be used when an event can occur multiple times.
 3. Event emitters should be used when there are multiple event types that can occur (can be handled with multiple callbacks but messy).
 
+What is a closure and higher order function?
+1. A closure is a function that has access to the variables in its parent scope, even after the parent function has completed execution.
+   (a) Bundle of functions.
+   (b) Have access to its lexical environment.
+2. A higher order function is a function that accepts another function as an argument OR returns a function.
 
+What is concurrency?
+1. Running and managing multiple computations at the same time.
+   (a) Interleaving of processes on single central CPU (context switching).
+
+What is parallelism?
+1. Running multiple computations simultaneously.
+   (a) Run computations on different CPUs.

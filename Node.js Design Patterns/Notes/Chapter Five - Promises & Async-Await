@@ -1,0 +1,213 @@
+Why should we avoid the callback pattern?
+1. Complex.
+2. Verbose.
+3. Error prone (what if we forget to handle or return an error).
+4. Leads to Zalgo (mix of async and sync behavior in the same function).
+5. Leads to callback hell -> hard to read, nested functions that are error prone.
+
+What is a promise?
+1. A promise is an object that tracks the status and result of an asynchronous operation.
+2. A promise can be chained.
+3. A promise can be treated like any other Javascript object.
+
+Why use async/await?
+1. Makes asynchronous code 'look' like synchronous code syntactically.
+
+Async/await is built on promises. Promises are built on callbacks.
+
+How does a promise work?
+1. Part of ECMAScript2015 (ES6). Prior to this there were many different implementations by third parties. Aligned on the Promise/A+ standard.
+2. Three states:
+   (a) Pending - not yet completed.
+   (b) Fulfilled - successfully completed.
+   (c) Rejected - terminated with an error.
+3. Once a promise is fulfilled or rejected it is settled.
+4. Once a promise is settled, the then method can be used to access the result e.g. promise.then(onFulfilled, onRejected).
+   
+   Callback:
+
+   asyncOp(args, (err, result) => {
+    if (err) {
+      // Handle error.
+    }
+    // Handle result.
+   })
+
+   Promise:
+
+   asyncOp(args)
+     .then((result) => {
+       // Handle result.
+     }, (err) => {
+       // Handle error.
+     })
+     
+5. A promise synchronously returns another promise allowing for chaining of promises.
+   (a) Fulfills with x if x is a value.
+   (b) Fulfills with fulfillment value of x if x is a promise.
+   (c) Rejects with rejection reason of x if x is a promise.
+   (d) If the onFulfilled or onRejected handler is omitted, the result or reason for rejection is propogated to the next handler until it is handled.
+
+   asyncOp(args1)
+     .then(result1 => {
+       return asyncOp(args2)
+     })
+     .then(result2 => {
+       return 'done'
+     })
+     .then(undefined, err => {
+       // Handle any errors.
+     })
+
+6. Promises are guaranteed to be invoked asynchronously, even if the fulfillment value is return synchronously avoiding Zalgo!
+7. If an exception is thrown, the promise catches the exception and rejects with the exception as the rejection reason.
+
+What is duck typing?
+1. Typing based on how an object functions externally rather than its actual type.
+
+How are promises constructed and used? What are the instance and static methods?
+1. Constructor - new Promise(resolve, reject).
+   (a) Resolve - function that when invoked will fulfill the promise with the value provided as the first argument.
+   (b) Reject - function that when invoked will reject the promise with the value provided as the reason for the rejection.
+2. Static methods:
+   (a) Promise.resolve(obj) - creates a new promise from another promise, thenable or value.
+       i. If a promise is provided, returns the promise.
+       ii. If a thenable is provided, converts the thenable to a promise and returns it.
+       iii. If a value is provided, returns a new promise with the fulfilled value.
+   (b) Promise.reject(err) - creates a new promise that rejects with the error as the rejection reason.
+   (c) Promise.all(promises) - accepts an array of promises and creates a promise that fulfills with an array of the promise fulfillment values.
+       i. If ANY promise rejects, immediately rejects with the rejection reason of the rejected promise.
+       ii. Use Promise.allSettled to not immediately reject.
+   (d) Promise.allSettled - accepts an array of promises and creates a promise that fulfills with either the fulfillment value or reason for rejection for each promise.
+       i. Unlike Promise.all, all promises will be either rejected or fulfilled (does not exit early).
+       ii. Each object in the return array has a status field with a value of fulfilled/rejected and a value field with the fulfillment value or the reason for rejection.
+    (e) Promise.race - accepts an array of promises and returns a promise equal to the first settled promise.
+3. Instance methods:
+   (a) promise.then(onFulfilled, onRejected) - called after the promise is settled to handle fulfillment or rejection.
+   (b) promise.catch(onRejected) - syntactic sugar for promise.then(undefined, onRejected) see above for more details.
+   (c) promise.finally() - callback invoked after the promise is fulfilled/rejected.
+       i. Receives no input arguments and return value is ignore unless it returns a rejected promise.
+       ii. If a rejected promise is returned or an error is thrown, the promise will reject with the rejection reason or thrown error.
+
+When would you create your own promise?
+1. Sometimes when dealing with callback based libraries or a callback function it will need wrapped in a promise.
+2. The 'util' package contains a 'promisify' helper to promisify callback functions.
+3. Because callback functions are standardizes and receive the callback last, we can write a generic function to promisify all callbacks:
+
+   function promisify(callbackBasedFxn) {
+     return function promisified(...args) {
+       return new Promise((resolve, reject) => {
+         callbackBasedFxn(...args, (err, result) => {
+           if (err) {
+             reject(err)
+           }
+           resolve(result)
+         })
+       })
+     }
+   }
+
+How can we convert callback style code to use promises?
+1. Can promisify functions using the above.
+2. Can omit handling errors by using the catch method at the end of a promise chain.
+
+How can we perform parallel execution using promises?
+1. Can simply use Promise.all or Promise.allSettled.
+2. Loop over tasks to create an array of promises passed to the above functions.
+
+How can we perform limited parallel execution using promises?
+1. We can create a task queue that uses promises.
+2. See the problem set for this chapter to view the solution.
+
+Why use async/await syntax?
+1. Without async/await we still need to call the then method and create a new function to handle each promise.
+2. Allows asynchronous code to be written like it is synchronous code.
+3. Improved readability.
+
+How does async/await work?
+1. Async/await looks like it pauses execution, awaiting for a promise to resolve.
+2. In actualality, the execution of the function is put on hold and stored in memory and the control flow is given back to the event loop.
+3. Once the promise is settled, the resolved value or rejection reason is provided to the async function and execution continues.
+4. Async functions always return another promise and are chainable/thenable.
+
+How are errors handled using async/await?
+1. Allows using try/catch blocks to handle errors thrown synchronously and rejected promises.
+2. An awaited promise that rejects throws an error with the rejection reason that can be caught.
+
+Why is using async/await in a forEach loop an anti-pattern?
+1. The promises are just ignored in the for each loop.
+2. They are all executed at once in parallel in the next execution of the event loop instead of being awaited one by one.
+
+How does parallel execution work with async/await?
+1. We can create an array of promises and then use a for loop to loop through them and await each promise.
+2. We can create an array of promises and await a Promise.all that accepts them as an argument.
+3. In general option two above is superior because Promise.all will reject immediately if any promise is rejected.
+
+How does limited parallel execution work with async/await?
+1. See the solution in the problem set to see how the task queue can be converted to using async/await.
+2. Uses a producer/consumer model:
+   (a) The producer adds tasks to the queue.
+   (b) The consumer removes tasks from the queue processes them one at a time.
+
+What is the infinite recursive promise loop problem? How does it cause a memory leak?
+1. A recursive function that returns a call to itself as a resolver value can cause a memory leak.
+2. The promise itself is never settled because the recursive function is called first.
+3. This leads to a memory leak as more and more promises are left un-resolved.
+4. This can be solved by not returning the call to the recursive function.
+5. However, this means that rejected promises or errors are not handled.
+6. We can wrap the loop inside of a new promise so that errors surface to the calling function.
+7. We can also use async/await to make sure the errors surface to the calling function.
+
+// This will cause a memory leak.
+
+function infiniteLoop() {
+  delay(1)
+    .then(() => {
+      console.log('tick')
+      return infiniteLoop()
+    })
+}
+
+// This will fix the infinite loop.
+
+function infiniteLoop() {
+  delay(1)
+    .then(() => {
+      console.log('tick')
+      infiniteLoop()
+    })
+}
+
+// This will allow the promise to be rejected and handle errors.
+
+function infiniteLoop() {
+  return new Promise((resolve, reject) => {
+    delay(1)
+      .then(() => {
+        console.log('tick')
+        infiniteLoop()
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+// Using async/await allows for better readability.
+
+function infiniteLoop() {
+  while (true) {
+    await delay(1)
+    console.log('tick')
+  }
+}
+
+// This will also lead to a memory leak.
+
+function infiniteLoop() {
+  while (true) {
+    await delay(1)
+    console.log('tick')
+    return infiniteLoop()
+  }
+}
