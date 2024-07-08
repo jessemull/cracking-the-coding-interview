@@ -5,7 +5,7 @@ What are the two types of modules available to the Node.js platform?
 Why do we need modules?
 1. Split the codebase into multiple files.
 2. Re-use the codebase.
-3. Makes testing things in isoluation easier.
+3. Makes testing things in isolation easier.
 4. Encapsulation.
 5. Dependency management.
 6. Maintainability.
@@ -18,7 +18,7 @@ What is the history of modules in Javascript?
 1. Originally there was no need to have modules. Code running in the browser was simple.
 2. Code could be separated by loading different script tags for different files.
 3. Everything was in the global scope making collisions likely.
-4. The first module systems were AMD and UMD asynchronous/unversal module definition.
+4. The first module systems were AMD and UMD asynchronous/universal module definition.
 5. Closely related was the concept of an immediately invoked function expression (IIFE).
    (a) (() => {
          var private = 'private'
@@ -122,7 +122,7 @@ const logger = require('./patcher')
 What are ESM modules?
 1. Specification introduced in ECMAScript6 to try to standardize module systems across the browser and server.
 2. Supports asynchronous module loading.
-3. Supports cyclical dpendency management.
+3. Supports cyclical dependency management.
 4. The most important difference between ESM and CJS is that ESM imports are static.
    (a) Import statements must be done outside the flow of control at the top of the file.
    (b) Allows for static analysis like tree shaking.
@@ -150,7 +150,7 @@ What are ESM modules?
    (b) Editor auto-complete.
    (c) Other.
 9. Anything that is not an export is private by default.
-10. Module identifiers are different that CJS.
+10. Module identifiers are different than CJS.
     (a) Can use relative path e.g. './logger' or '../logger'.
     (b) Can use an absolute path using the file:/// prefix e.g. 'file:///opt/node.js/config.js'.
     (c) Can use a base path for packages installed into node_modules e.g. 'http'.

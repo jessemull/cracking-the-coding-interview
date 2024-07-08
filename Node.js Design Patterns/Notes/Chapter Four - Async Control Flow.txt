@@ -24,7 +24,7 @@ What is sequential execution?
    (b) Using the output of one task as the input to another task (piping, chaining, waterfalls).
    (c) Iterating over a collection while running an async task on each element.
 
-*** Sequential Execution Patter ***
+*** Sequential Execution Pattern ***
 
 function task1(cb) {
   asyncOp(() => {
