@@ -1,0 +1,42 @@
+What are the basic requirements for running a Kotlin program?
+1. Declare a function using the fun keyword followed by the name, parentheses with arguments and curly brackets.
+
+   fun main(args) {
+     // Run our application here!
+   }
+
+2. Just as in Java the entry point for the application is main.
+3. Hitting play in IntelliJ compiles our code and runs it simultaneously.
+
+How do the JDK/JVM work?
+1. JDK -> Java Development Kit.
+2. JVM -> Java Virtual Machine.
+3. A Kotlin compiler is included in the JDK.
+4. Kotlin source code is converted to Java ByteCode by the JDK Kotlin compiler.
+5. The JVM then converts this byte code into code that a specific machine can interpret.
+6. In this way, Java can be compiled to code that works on any machine using different JVMs.
+7. The source code we write is completely de-coupled from the machine used to run the code.
+
+How do variables work in Kotlin? What is the syntax?
+1. Use the var keyword to declare a variable e.g. var myVariable.
+2. Variable names should be in camel case.
+3. A colon is used to declare the variable type e.g. var myVariable: String.
+4. Use the = operator to set a variable value e.g. var myVariable: String = "String".
+5. The var keyword can be re-assigned e.g. myVariable = "Re-assigned".
+6. Kotlin has static typing so re-assignment must be of the correct type or the code will not compile.
+7. Declaring a variable using the keyword val means it cannot be re-assigned.
+
+How does type inference work in Kotlin?
+1. Kotlin is able to use type inference.
+2. You don't have to include a type and Kotlin will infer the type e.g. var name = "Name" will be of type String.
+
+How does string interpolation work?
+1. You can use string interpolation in Kotlin by using the $ operator and curly braces e.g. "Hello ${myVariable}".
+2. You can also omit the curly braces completely and just use the dollar sign e.g. "Hello $myVariable".
+3. Curly braces are needed to do calculation inside the interpolated string e.g. "Result: ${x + y}".
+
+What are the important lecture points regarding Kotlin?
+1. Kotlin is statically typed.
+2. Kotlin is compiled by the JDK to bytecode.
+3. Bytecode is complied by the JVM to machine specific code.
+4. Kotlin uses type inference.

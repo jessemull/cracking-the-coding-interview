@@ -1,0 +1,121 @@
+How do you declare functions in Kotlin?
+1. Declare using the keyword fun.
+2. Use camel case for function names.
+3. Follow with parens with args and curly braces.
+
+fun printName(name: String) {
+  println("My first Kotlin function has a name input of: " + name)
+}
+
+4. Args are immutable.
+5. Variables and args are function scoped and cannot be accessed outside the function.
+
+How do you return data from a function using Kotlin?
+1. Use the return keyword to return a value from a Kotlin function.
+2. Must declare the return type for the function.
+
+fun getMax(a: Int, b: Int): Int {
+  if (a > b) {
+    return a
+  } else {
+    return b
+  }
+}
+
+3. Cannot make statements below a final return statement because they are unreachable.
+4. Can return from a function without a value.
+
+fun noReturn() {
+  return
+}
+
+5. There is a shorthand notation for functions as well. Usually only used for single line of code.
+
+fun shortFun(a: Int, b: Int): Int = if (a > b) a else b
+
+What is function overloading in Kotlin?
+1. In Kotlin you can have the same function name with different types applied to the arguments.
+2. The compiler understands from the types passed to the function which function to call.
+3. This is called overloading the function.
+
+fun shortFun(a: Int, b: Int): Int = if (a > b) a else b
+fun shortFun(a: Double, b: Double): Double = if (a > b) a else b
+shortFun(8, 9) // Uses first function.
+shortFun(8.3, 9.2) // Uses second function.
+
+4. Can also add additional arguments and compiler can understand which function to use.
+
+fun shortFun(a: Int, b: Int): Int = if (a > b) a else b
+fun shortFun(a: Int, b: Int, c: Int): Int = if (a > c) a else c
+shortFun(8, 9) // Uses first function.
+shortFun(8, 9, 10) // Uses second function.
+
+How do default parameters work in Kotlin?
+1. You can assign a default value to an argument inside the parens.
+
+fun sendMessage(name: String = "No name", message: String = "No message") {
+  println("Name = $name & Message = $message")
+}
+
+sendMessage() // Name = No Name & Message = No message
+
+2. Can omit an argument and the following arguments will use the default.
+
+fun sendMessage(name: String = "No name", message: String = "No message") {
+  println("Name = $name & Message = $message")
+}
+
+sendMessage("Jesse") // Name = Jesse & Message = No Message
+
+3. Can use named arguments and then omit any of the other arguments.
+
+fun sendMessage(name: String = "No name", message: String = "No message") {
+  println("Name = $name & Message = $message")
+}
+
+sendMessage(message = "My message") // Name = No name & Message = My message
+
+4. If you use named parameters there is no defined order.
+
+fun sendMessage(name: String = "No name", message: String = "No message") {
+  println("Name = $name & Message = $message")
+}
+
+sendMessage(message = "My message", name = "Jesse") // Name = Jesse & Message = My message
+
+5. You can call a function to set a default value.
+
+fun getDefaultValue(): String {
+  return "No message"
+}
+
+fun sendMessage(name: String = "No name", message: String = getDefaultValue()) {
+  println("Name = $name & Message = $message")
+}
+
+What is the vararg keyword in Kotlin?
+1. If we want to pass a variable number of arguments of the same type to a function we can use vararg.
+
+fun sumVarArgs(vararg numbers: Int): Int {
+    var result = 0
+    for (i in numbers) {
+      result += i
+    }
+    return result
+}
+
+sumVarArgs(4, 3, 5, 7, 8, 8, 10)
+
+2. Can loop over the input. Use the vararg keyword to declare a vararg. 
+3. Could also just use an array.
+
+How do you use a forEach loop in Kotlin?
+1. Covered in next unit but can use shorthand forEach loop like in Javascript.
+
+fun sumVarArgs2(vararg numbers: Int): Int {
+    var result = 0
+    numbers.forEach {
+        result += it
+    }
+    return result
+}

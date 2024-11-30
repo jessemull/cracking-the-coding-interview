@@ -1,0 +1,67 @@
+What are the whole number data types in Kotlin?
+1. Int
+   (a) Can access maximum value with Int.MAX_VALUE -> 2147483647.
+   (b) Can access minimum value with Int.MIN_VALUE -> -2147483648.
+   (c) The compiler will throw an error if there is overflow.
+   (d) Size is 32 bits / 4 bytes.
+2. Byte
+   (a) Can access maximum value with Byte.MAX_VALUE -> 127.
+   (b) Can access minimum value with Byte.MIN_VALUE -> -128.
+   (c) The compiler will throw an error if there is overflow.
+   (d) Size is 8 bits / 1 byte.
+3. Short
+   (a) Can access maximum value with Short.MAX_VALUE -> 32767.
+   (b) Can access minimum value with Short.MIN_VALUE -> -32768.
+   (c) The compiler will throw an error if there is overflow.
+   (d) Size is 16 bits / 2 bytes.
+3. Long
+   (a) Can access maximum value with Long.MAX_VALUE -> 9223372036854775807.
+   (b) Can access minimum value with Long.MIN_VALUE -> -9223372036854775808.
+   (c) The compiler will throw an error if there is overflow.
+   (d) Size is 64 bits / 8 bytes.
+
+What are the floating point number data types in Kotlin?
+1. Float
+   (a) Can access maximum value with Float.MAX_VALUE -> 3.4028235E38.
+   (b) Can access minimum value with Float.MIN_VALUE -> 1.4E-45.
+   (c) The compiler will throw an error if there is overflow.
+   (d) Size is 32 bits / 4 bytes.
+   (e) 24 Significant bits / 8 exponent bits / 6-7 decimal digits.
+2. Double
+   (a) Can access maximum value with Double.MAX_VALUE -> 1.7976931348623157E308.
+   (b) Can access minimum value with Double.MIN_VALUE -> 4.9E-324.
+   (c) The compiler will throw an error if there is overflow.
+   (d) Size is 64 bits / 8 bytes.
+   (e) 53 Significat bits / 11 exponent bits / 15-16 decimal digits.
+
+How can we figure out the max/min values for byte, short, int and long if we know the size?
+1. Minimum value = -2^(numBits - 1).
+2. Maximum value = 2^(numBits - 1) - 1.
+3. Example for short...
+   (a) Min value -> -2^(16 - 1) = -2^15 = -32768.
+   (b) Max value -> 2^(16 - 1) - 1 = 32768 - 1 = 32767.
+
+How does type inference work for Kotlin number data types?
+1. Kotlin will try to assign Int type.
+2. To declare a byte or short you need to explicitly type the variable on declaration.
+3. To declare a float:
+   (a) Can declare it by adding the type e.g. var myLong: Long = 10.
+   (b) Can declare it by adding a special character to the end of the value e.g var myLong = 10L.
+   (c) If the declaration overflows the Int type (or another type) type inference will apply the correct type e.g. var myLong = 123456789 will be a long.
+4. To declare a float:
+   (a) Must use the special char e.g. var myFloat = 10.0F.
+   (b) Otherwise a double is always used.
+   (c) You don't need to include decimals if you use the special char e.g. var myFloat = 2F.
+5. To declare a double:
+   (a) Must include the decimals.
+
+What is the char data type?
+1. To declare a char use single quotes e.g. val myChar = 'a'.
+2. Must only have a single letter in the single quotes.
+
+What is the boolean data type?
+1. To declare a boolean just assign true/false e.g. val myBool = true or val myBool = false.
+2. Used for control flow to conditionally execute a block of code.
+
+All of these types are called primitive data types. They are predefined data types. 
+String is a special data type with 'class support'.

@@ -1,0 +1,119 @@
+How does control flow work in Kotlin?
+1. Can use if/else statements to conditionally fire a block of code e.g. if (bool == true) { // execute code... }.
+   (a) Can simplify if statements by just passing a boolean value e.g. if (bool) { // execute code... }.
+   (b) Else is fired if the argument to the if statement evaluates to false e.g. if (bool) { // execute code... } else { // Do something else... }.
+   (c) Can omit curly braces and execute just the first line of code e.g. if (bool) // execute code...
+   (d) Can chain if/else statements together.
+   (e) Can use an if/else statement to assign a value to a variable.
+2. Can use greater than or less than operators > or < .
+3. Can use == and != operators to check equivalency of primitive types.
+4. Can use greater than or equal to and less than or equal to operators => or <= .
+5. Can use a logical OR to check multiple conditions and execute code if one evaluates to true e.g. num >= 2 || num <= 5.
+6. Can use a logical AND to check multiple conditions and execute code if all evaluate to true e.g. num >= 2 && num <= 5.
+7. Can use the logical NOT operator ! to check the inverse of a boolean statement.
+
+How does variable assignment work using if/else in Kotlin?
+1. This was the first surprise. You can use an equals sign and assign an entire if/else block to a variable.
+2. The last statement in the condition is assigned to the variable.
+
+  val myConditionalValue = if (bool) {
+    "Assign this string!"
+  } else {
+    "Assign this other string!"
+  }
+
+3. Can also use a short hand version.
+
+  val myConditionalValue = if (isActive)
+    "Assign this."
+  else
+    "Assign that."
+
+  OR
+
+  val myConditionalValue = if (isActive) "Assign this." else "Assign that."
+
+4. Type inference still works here. This statement will assign a number or string.
+
+  val myConditionalValue = if (isActive) "Assign this." else 5
+
+How do when statements work in Kotlin?
+1. The when statement is like a switch block in other languages.
+2. Takes an argument and then check against cases.
+
+val value = 12
+
+when (value) {
+  12 -> println("The value is 12.")
+  7 -> println("The value is 7.")
+  else -> println("This is the default statement.")
+}
+
+3. Can also combine a bunch of cases just like in a switch block.
+
+val value = 12
+
+when (value) {
+  12, 7 -> println("The value is 12 or 7.")
+  else -> println("This is the default statement.")
+}
+
+4. Can even use comporators that evaluate to a boolean. Can use ! to negate boolean value as well.
+
+val value = 12
+
+when (value) {
+  in 1 .. 10 -> println("Value is in the range 1 to 10.")
+  !in 1 .. 10 -> println("Value is not in the range 1 to 10.")
+  else -> println("This is the default statement.")
+}
+
+5. Convetion is to use curly braces if there is more than one line of code to execute.
+
+val value = 12
+
+when (value) {
+  in 1 .. 10 -> {
+    println("Value is in the range 1 to 10.")
+  }
+  !in 1 .. 10 -> {
+    println("Value is not in the range 1 to 10.")
+  }
+  else -> { 
+    println("This is the default statement.")
+  }
+}
+
+6. Can also use for assignement.
+
+val value = 12
+
+val assigned = when (value) {
+  in 1 .. 10 -> {
+    "Value is in the range 1 to 10."
+  }
+  !in 1 .. 10 -> {
+    "Value is not in the range 1 to 10."
+  }
+  else -> { 
+    "This is the default statement."
+  }
+}
+
+7. Can delete the input argument and just use boolean expressions.
+
+val value = 12
+
+val assigned = when {
+  value < 15 -> {
+    "Value is less than 15."
+  }
+  value in 1 .. 10 -> {
+    "Value is in the range 1 to 10."
+  }
+  else -> { 
+    "This is the default statement."
+  }
+}
+
+8. If more than one statement are true. Only the first statement that evaluates to true is executed.

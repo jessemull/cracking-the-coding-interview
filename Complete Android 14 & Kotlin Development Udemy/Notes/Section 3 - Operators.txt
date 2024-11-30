@@ -1,0 +1,40 @@
+What are the Kotlin operands?
+1. + -> addition -> sums two numbers.
+2. - -> subtraction -> subtracts one number from another.
+3. * -> multiplication -> multiplies two numbers together.
+4. / -> division -> divides one number into another.
+5. % -> modulus -> divides one number into another and returns the remainder.
+
+What if two different types are used?
+1. If a floating point type is used with a whole number type the result will be a floating point type e.g. double to handle the precision.
+2. The type with the most precision will be used to do the calculation e.g. float + double will result in a double.
+
+How does order of operations work?
+1. Use parentheses to guarantee the order of operations, otherwise mathematical rules apply e.g. multiplication before addition.
+
+What are compound assignment operators?
+1. Can use shorthand notation e.g. to add two to a number -> myVariable += 2 or to divide by two -> myVariable /= 2.
+2. Can use shortcut in IntelliJ to convert into compound assignment operator.
+
+How do we increment and decrement numbers?
+1. Prefix incrementation -> ++myVariable.
+   (a) Increments the value before output.
+2. Postfix incrementation -> myVariable++.
+   (a) First outputs the variable and then increments it.
+3. Prefix decrementation -> --myVariable.
+   (a) Decrements the value before output.
+4. Postfix decrementation -> myVariable--.
+   (a) First outputs the variable and then decrements it.
+
+How do we add comments in Kotlin?
+1. We can use an inline comment using //.
+   
+   // Here is a single line comment.
+
+2. Can use a multi-line comment using /* */.
+
+   /*
+
+   Here is a multi-line comment.
+
+   */

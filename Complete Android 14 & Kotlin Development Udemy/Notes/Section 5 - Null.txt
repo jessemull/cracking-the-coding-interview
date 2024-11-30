@@ -1,0 +1,31 @@
+How does null assignment work in Kotlin?
+1. You cannot set variables to null.
+2. All values by default are non-nullable.
+3. Assigning null to a value results in an error if the value is non-nullable.
+4. To create a nullable type, we have to explicitly set it as nullable by adding a question mark to the type declaration.
+
+val value: String? = null
+
+5. Must check for null value explicitly when using the variable.
+
+val myNullableStr: String? = null
+
+if (myNullableStr) {
+  println(myNullableStr.length)
+}
+
+6. Can use a shortcut to check for null values using safe call operator question mark.
+
+val myNullableStr: String? = null
+println(myNullableStr?.length)
+
+7. Can throw an exception for null by using the !! operator.
+
+val myNullableStr: String? = null
+println(myNullableStr!!.length)
+
+8. Can use the Elvis operator (looks like Elvis' hair) for assignment.
+
+val myNullableStr: String? = null
+val value = myNullableStr ?: "It is null."
+println("$value") // It is null.
