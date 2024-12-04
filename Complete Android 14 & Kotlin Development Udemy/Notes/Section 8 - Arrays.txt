@@ -1,0 +1,50 @@
+How do arrays work in Kotlin?
+1. If we need to store more than one value in a collection we can use an array.
+2. We can declare an array type by using the Array keyword and the type of the array inside the <> brackets.
+3. To set the value of the array we can use the arrayOf keyword and pass a list of values.
+
+var array: Array<String> = arrayOf("Str1", "Str2")
+
+4. Array values are accessed by index from zero to the array length.
+
+var array: Array<String> = arrayOf("Str1", "Str2")
+println(array[0]) // Str1
+
+5. Access the size of the array using the size property.
+
+var array: Array<String> = arrayOf("Str1", "Str2")
+println(array.size) // 2
+
+6. Kotlin supports arrays with different types inside them. It assigns the type comparable.
+
+var array = arrayOf("Str1", 0)
+
+7. Can iterate over the array by using the in keyword.
+
+var array: Array<String> = arrayOf("Str1", "Str2")
+for (str in array) {
+  println(str)
+}
+
+8. Can check if something is a certain type by using the is keyword.
+
+var array: Array<String> = arrayOf("Str1", 0)
+for (i in array) {
+  if (i is String) {
+    println(i.length)
+  }
+}
+
+9. You can use shorthand notation to declare array of primitives.
+
+var array: IntArray = intArrayOf(1, 2, 3)
+var array: BooleanArray = booleanArrayOf(true, false)
+
+10. Can access an element of a collection using elementAt.
+
+var array: IntArray = intArrayOf(1, 2, 3)
+println(array.elementAt(1)) // 2
+
+11. To declare a multi-dimensional array you place one array inside the others type.
+
+var arrayOfArrays: Array<Array<Int>> = arrayOf(arrayOf(1, 2, 3), arrayOf(1, 2, 3))

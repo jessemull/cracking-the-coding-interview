@@ -1,0 +1,91 @@
+How do for loops work in Kotlin?
+1. Execute code many times again and again without writing it out each time.
+2. For loops use the in keyword operator.
+
+for (i in 1..10) {
+  println(i) // Includes 1 and 10 in output
+}
+
+3. Note that using the .. notation this is inclusive and will print 1 and 10.
+4. Can also use the until keyword to do a range in a loop. Note that using until will exclude the last value.
+
+for (i in 1 until 10) {
+  println(i) // Includes 1 in output but NOT 10
+}
+
+5. Can use the downTo keyword to do a range and interate downwards.
+
+for (i in 10 downTo 1) {
+  println(i) // Includes 10 and 1 in output
+}
+
+6. Can create an arbitrary step to increment or decrement by.
+
+for (i in 1 until 10 step 2) {
+  println(i) // 1, 3, 5, 7, 9
+}
+
+How do while and do while loops work in Kotlin?
+1. Use the while keyword and put a condition inside the following parens.
+2. The code inside the curly braces is executed repeatedly while the condition evaluates to true.
+
+var i = 0
+while (i < 3) {
+    println(i++)
+}
+
+3. Do while loop is similar but use the do keyword followed by curly braces first and then the while keyword with the condition.
+4. The code between the curly braces is executed before the condition is evaluated so at least one time.
+
+var i = 0
+do {
+  println(i++)
+} while (i < 3)
+
+5. Use the continue keyword to skip an iteration of the loop based on a condition.
+
+var i = 0
+while (i < 3) {
+  i++ // Must increment first or have infinite loop
+  if (i == 2) {
+    continue // Skips printing 2
+  }
+  println(i)
+}
+
+6. Use the break keyword to break out of the loop and stop execution.
+
+var i = 0
+while (i < 3) {
+  if (i == 1) {
+    break // Will just print 0 then break
+  }
+  println(i++)
+}
+
+7. You can use a range with the .. operator in conditionals.
+
+var i = 0
+if (i in 1..10) {
+  println(i)
+}
+
+8. Note that continue and break can also be used in for loops as well. Just covered in this course in this order.
+9. Can nest loops and can break out of or continue inner loops.
+
+for (i in 1..5) {
+  for (j in 1..2) {
+    println("i: $i j: $j")
+  }
+}
+
+10. You can target an outer loop by using labels. The label is for the loop and uses the @ symbol and the break statement uses the label as an argument to the @ symbol.
+
+outer@ for (i in 1..5) {
+  for (j in 1..2) {
+    if (j == 2) {
+        break@outer
+    }
+    println("i: $i j: $j")
+  }
+}
