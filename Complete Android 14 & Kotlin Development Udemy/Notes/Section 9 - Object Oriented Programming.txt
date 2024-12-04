@@ -391,4 +391,137 @@ fun getResult(result: Result) {
 }
 
 How do abstract classes work in Kotlin?
-1. 
+1. Abstract classes are very similar to interfaces but allow you to include properties.
+2. Use the abstract keyword to define an abstract class.
+3. Abstract classes can only be inherited they cannot be instantiated.
+4. The inheriting class implements the functionality. The abstract class provides the template.
+5. Functions and properties must also use the abstract keyword if they are to be implemented by the inherting class.
+
+abstract class Animal {
+    var kingdom = "Animalia"
+    abstract var genus: String
+    abstract fun move(steps: Int)
+    abstract fun legNumber(): Int
+}
+
+What is the difference between structure equality and referential equality?
+1. For primitives, comparison will use the structural equality (value).
+
+val name1 = "Jesse"
+val name2 = "Jesse"
+println(name1 == name2) // true
+
+2. For objects, comparison will use referential equality (reference in memory).
+
+val plane1 = Plane("Plane")
+val plane2 = Plane("Plane")
+val plane3 = plane1
+
+println(plane1 == plane2) // false
+println(plane1 == plane3) // true
+
+3. Can call the inherited equals function to check referential equality.
+
+println(plane1.equals(plane3)) // true
+
+4. All classes in Kotlin inherit the Any class including primitives.
+5. The equals function can be overridden if we want to compare by reference and structure. Note below the check that other is a user.
+
+class User(name: String, var lastName: String, var age: Int) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other is User && this.name == other.name && this.lastName == other.lastName && this.age == other.age) {
+            return true
+        }
+        return false
+    }
+}
+
+val user1 = User("Jesse", "Mull", 23)
+val user2 = User("Jesse", "Mull", 23)
+println(user1.equals(user2)) // true
+println(user1 == user2) // true
+
+6. Whenever you override equals you need to override the hash code function. They two objects that are equal need to have the same hash code. This is important for equality and for using collections.
+7. Can use the Object class from util package to create a hash based on the data used for the equality comparison.
+
+import java.util.Objects
+
+class User(name: String, var lastName: String, var age: Int) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other is User && this.name == other.name && this.lastName == other.lastName && this.age == other.age) {
+            return true
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(this.name, this.lastName, this.age)
+    }
+}
+
+8. Can also override the toString function. By default toString will return the class name plus @ plus the hash code.
+
+import java.util.Objects
+
+class User(name: String, var lastName: String, var age: Int) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other is User && this.name == other.name && this.lastName == other.lastName && this.age == other.age) {
+            return true
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(this.name, this.lastName, this.age)
+    }
+
+    override fun toString(): String {
+        return "User($name, $lastName, $age)" 
+    }
+}
+
+What is a data class in Kotlin?
+1. If you include the keyword data before a class, Kotlin does the above and will compare the objects by structure instead of reference.
+2. It updates the to string method and the hash code method in addition to the equals method.
+3. The comparison for equality uses anything passed to the constructor.
+4. To not have a value included in the comparison just add it as a property in the class but omit it from the constructor.
+
+data class Transaction(var action: String, var amount: Double) {}
+val transaction1 = Transaction("deposit", 100.00)
+val transaction2 = Transaction("deposit", 100.00)
+println(transaction1 == transaction2) // true
+println(transaction1) // Transaction(action=deposit, amount=100.0)
+
+What are interfaces?
+1. Defines a set of functions for a class, defines the behavior or template but the logic is implemented by the inheriting class.
+2. Similar to abstract classes but cannot contain properties.
+3. Define what is going to be done but not how it will be done.
+4. Use the interface keyword to create an interface.
+5. Interfaces do not have constructors because they cannot be instantiated.
+6. Note that interfaces can contain declarations of properties that will need to be added to each class implementing the interface.
+
+interface Engine {
+    val size: String
+    fun start(key: String): Boolean
+}
+
+6. Use a colon and the interface to implement it. Use the override keyword to implement the interface functions.
+
+class CombustionEngine(var rpms: Int): Engine {
+    override val size = "Large"
+    override fun start(key: String): Boolean {
+        if (key == "combustion") {
+            return true
+        }
+        return false
+    }
+}
